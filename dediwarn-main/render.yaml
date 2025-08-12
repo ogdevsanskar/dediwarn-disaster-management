@@ -1,0 +1,39 @@
+services:
+  # Frontend Service (Static Site)
+  - type: web
+    name: disaster-management-frontend
+    env: static
+    buildCommand: cd frontend && npm ci --include=dev && npm run build
+    staticPublishPath: ./frontend/dist
+    rootDir: ./
+    envVars:
+      - key: NODE_VERSION
+        value: 20.11.0
+      - key: NPM_VERSION
+        value: 10.2.4
+      - key: NODE_ENV
+        value: production
+    routes:
+      - type: rewrite
+        source: /api/*
+        destination: https://disaster-management-backend.onrender.com/api/*
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+  # Backend Service (Node.js API)
+  - type: web
+    name: disaster-management-backend
+    env: node
+    plan: free
+    buildCommand: npm run build:backend
+    startCommand: npm run start:backend
+    rootDir: ./
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 20.11.0
+      - key: PORT
+        value: 10000
+    healthCheckPath: /api/status

@@ -1,0 +1,958 @@
+import React, { useState, useEffect, useCallback } from 'react';
+import { TrendingUp, MapPin, Activity, Globe, AlertTriangle, Network, Zap, Brain, Database, Wifi, CloudRain, Thermometer, Wind, Eye, RefreshCw, Download, Share2, Settings, Bell } from 'lucide-react';
+import {
+  AreaChart,
+  Area,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  ComposedChart,
+  Radar,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  ScatterChart,
+  Scatter,
+  Line
+} from 'recharts';
+import { analyticsService, SystemMetrics } from '../services/analyticsService';
+
+// TypeScript interfaces
+interface PerformanceDataPoint {
+  time: string;
+  fullTime: Date;
+  warnings: number;
+  responseTime: number;
+  networkLoad: number;
+  throughput: number;
+  activeNodes: number;
+  errorRate: number;
+  cpuUsage: number;
+  memoryUsage: number;
+  bandwidthIn: number;
+  bandwidthOut: number;
+}
+
+interface NetworkNode {
+  id: string;
+  name: string;
+  x: number;
+  y: number;
+  connections: number;
+  load: number;
+  status: 'optimal' | 'good' | 'high' | 'low';
+  latency: number;
+  uptime: number;
+}
+
+interface RealtimeMetrics {
+  totalWarnings: number;
+  activeIncidents: number;
+  responseRate: number;
+  networkHealth: number;
+  globalCoverage: number;
+  throughput: number;
+  avgLatency: number;
+  uptime: number;
+}
+
+export const Analytics: React.FC = () => {
+  const [activeTab, setActiveTab] = useState('analytics');
+  const [timeRange, setTimeRange] = useState('7d');
+  const [selectedMetric, setSelectedMetric] = useState('warnings');
+  const [performanceData, setPerformanceData] = useState<PerformanceDataPoint[]>([]);
+  const [networkTopologyData, setNetworkTopologyData] = useState<NetworkNode[]>([]);
+  const [realtimeMetrics, setRealtimeMetrics] = useState<RealtimeMetrics>({
+    totalWarnings: 1247,
+    activeIncidents: 12,
+    responseRate: 94.2,
+    networkHealth: 99.7,
+    globalCoverage: 156,
+    throughput: 15.2,
+    avgLatency: 125,
+    uptime: 99.98
+  });
+  const [isLiveMode, setIsLiveMode] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
+  const [apiStatus, setApiStatus] = useState({
+    system: 'connected',
+    network: 'connected', 
+    emergency: 'fallback'
+  });
+
+  // Load real API data
+  const loadRealData = useCallback(async () => {
+    try {
+      const [performanceMetrics, networkTopology, systemMetrics] = await Promise.all([
+        analyticsService.getPerformanceMetrics(timeRange),
+        analyticsService.getNetworkTopology(),
+        analyticsService.getSystemMetrics()
+      ]);
+
+      // Transform API data to component format
+      const transformedPerformance = performanceMetrics.map(metric => ({
+        time: new Date(metric.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        fullTime: new Date(metric.timestamp),
+        warnings: metric.warnings,
+        responseTime: metric.responseTime,
+        networkLoad: metric.networkLoad,
+        throughput: metric.throughput,
+        activeNodes: metric.activeNodes,
+        errorRate: metric.errorRate,
+        cpuUsage: metric.cpuUsage,
+        memoryUsage: metric.memoryUsage,
+        bandwidthIn: metric.bandwidthIn,
+        bandwidthOut: metric.bandwidthOut
+      }));
+
+      const transformedNetwork = networkTopology
+        .filter(node => node.metrics.status !== 'offline')
+        .map(node => ({
+          id: node.id,
+          name: node.name,
+          x: node.location.lng,
+          y: node.location.lat,
+          connections: node.metrics.connections,
+          load: node.metrics.load,
+          status: node.metrics.status as 'optimal' | 'good' | 'high' | 'low',
+          latency: node.metrics.latency,
+          uptime: node.metrics.uptime
+        }));
+
+      setPerformanceData(transformedPerformance);
+      setNetworkTopologyData(transformedNetwork);
+      setRealtimeMetrics({
+        totalWarnings: systemMetrics.totalWarnings,
+        activeIncidents: systemMetrics.activeIncidents,
+        responseRate: systemMetrics.responseRate,
+        networkHealth: systemMetrics.networkHealth,
+        globalCoverage: systemMetrics.globalCoverage,
+        throughput: systemMetrics.throughput,
+        avgLatency: systemMetrics.avgLatency,
+        uptime: systemMetrics.uptime
+      });
+
+      setLastUpdated(new Date());
+      setApiStatus({
+        system: 'connected',
+        network: 'connected',
+        emergency: 'fallback'
+      });
+    } catch (error) {
+      console.error('Failed to load real API data:', error);
+      setApiStatus({
+        system: 'fallback',
+        network: 'fallback',
+        emergency: 'fallback'
+      });
+    }
+  }, [timeRange]);
+
+  // Setup real-time updates
+  useEffect(() => {
+    loadRealData(); // Initial load
+
+    if (isLiveMode) {
+      // Setup real-time subscription
+      analyticsService.subscribeToRealTimeUpdates((update) => {
+        setLastUpdated(new Date());
+        
+        if (update.type === 'system') {
+          const metrics = update.data as SystemMetrics;
+          setRealtimeMetrics(prev => ({
+            ...prev,
+            ...metrics
+          }));
+        }
+      });
+
+      // Periodic refresh
+      const interval = setInterval(loadRealData, 30000); // Update every 30 seconds
+      return () => clearInterval(interval);
+    }
+
+    return () => {
+      analyticsService.disconnect();
+    };
+  }, [loadRealData, isLiveMode]);
+
+  // Generate fallback data (enhanced simulation for fallback mode)
+  const generatePerformanceData = useCallback(() => {
+    const now = new Date();
+    const data = [];
+    const dataPoints = timeRange === '24h' ? 24 : timeRange === '7d' ? 168 : timeRange === '30d' ? 720 : 2160;
+    
+    for (let i = dataPoints - 1; i >= 0; i--) {
+      const time = new Date(now.getTime() - i * (timeRange === '24h' ? 3600000 : 3600000));
+      data.push({
+        time: time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        fullTime: time,
+        warnings: Math.floor(Math.random() * 50) + 200 + Math.sin(i / 10) * 20,
+        responseTime: Math.floor(Math.random() * 50) + 80 + Math.cos(i / 8) * 15,
+        networkLoad: Math.floor(Math.random() * 40) + 40 + Math.sin(i / 12) * 10,
+        throughput: Math.floor(Math.random() * 8) + 12 + Math.cos(i / 6) * 3,
+        activeNodes: Math.floor(Math.random() * 100) + 2800 + Math.sin(i / 15) * 50,
+        errorRate: Math.max(0, Math.random() * 2 + Math.sin(i / 20) * 0.5),
+        cpuUsage: Math.floor(Math.random() * 30) + 45 + Math.sin(i / 14) * 10,
+        memoryUsage: Math.floor(Math.random() * 25) + 55 + Math.cos(i / 16) * 8,
+        bandwidthIn: Math.floor(Math.random() * 500) + 1000 + Math.sin(i / 11) * 200,
+        bandwidthOut: Math.floor(Math.random() * 400) + 800 + Math.cos(i / 13) * 150
+      });
+    }
+    return data;
+  }, [timeRange]);
+
+  // Generate network topology data
+  const generateNetworkTopologyData = useCallback(() => {
+    const nodes = [
+      { id: 'mumbai', name: 'Mumbai Hub', x: 72.8777, y: 19.0760, connections: 15, load: 85, status: 'optimal' },
+      { id: 'delhi', name: 'Delhi Hub', x: 77.1025, y: 28.7041, connections: 12, load: 72, status: 'good' },
+      { id: 'bangalore', name: 'Bangalore Hub', x: 77.5946, y: 12.9716, connections: 18, load: 94, status: 'high' },
+      { id: 'chennai', name: 'Chennai Hub', x: 80.2707, y: 13.0827, connections: 10, load: 68, status: 'good' },
+      { id: 'kolkata', name: 'Kolkata Hub', x: 88.3639, y: 22.5726, connections: 8, load: 45, status: 'low' },
+      { id: 'hyderabad', name: 'Hyderabad Hub', x: 78.4867, y: 17.3850, connections: 14, load: 78, status: 'optimal' }
+    ];
+
+    return nodes.map(node => ({
+      ...node,
+      load: Math.max(20, Math.min(100, node.load + (Math.random() - 0.5) * 10)),
+      connections: Math.max(5, node.connections + Math.floor((Math.random() - 0.5) * 4)),
+      latency: Math.floor(Math.random() * 50) + 30,
+      uptime: Math.max(95, 100 - Math.random() * 3),
+      status: node.status as 'optimal' | 'good' | 'high' | 'low'
+    }));
+  }, []);
+
+  // Generate real-time metrics
+  const generateRealtimeMetrics = useCallback(() => {
+    return {
+      totalWarnings: Math.floor(Math.random() * 100) + 1200,
+      activeIncidents: Math.floor(Math.random() * 20) + 5,
+      responseRate: Math.max(90, 100 - Math.random() * 8),
+      networkHealth: Math.max(95, 100 - Math.random() * 4),
+      globalCoverage: Math.floor(Math.random() * 10) + 150,
+      throughput: Math.floor(Math.random() * 5) + 12,
+      avgLatency: Math.floor(Math.random() * 30) + 100,
+      uptime: Math.max(99.5, 100 - Math.random() * 0.4)
+    };
+  }, []);
+
+  // Fallback to simulated data if API fails
+  useEffect(() => {
+    if (apiStatus.system === 'fallback') {
+      const updateData = () => {
+        setPerformanceData(generatePerformanceData());
+        setNetworkTopologyData(generateNetworkTopologyData());
+        setRealtimeMetrics(generateRealtimeMetrics());
+      };
+
+      updateData(); // Initial load
+
+      let interval: NodeJS.Timeout;
+      if (isLiveMode) {
+        interval = setInterval(updateData, 3000); // Update every 3 seconds
+      }
+
+      return () => {
+        if (interval) clearInterval(interval);
+      };
+    }
+  }, [generatePerformanceData, generateNetworkTopologyData, generateRealtimeMetrics, isLiveMode, apiStatus.system]);
+
+  // Notification system
+  const showNotification = (message: string, type: 'success' | 'info' | 'warning' | 'error' = 'info') => {
+    // Implementation for showing notifications
+    console.log(`${type}: ${message}`);
+  };
+
+  const tabs = [
+    { id: 'analytics', label: 'Analytics', icon: TrendingUp },
+    { id: 'network', label: 'Network Status', icon: Network },
+    { id: 'prediction', label: 'Predictions', icon: Brain }
+  ];
+
+  const analyticsMetrics = [
+    { id: 'warnings', label: 'Warnings Issued', value: realtimeMetrics.totalWarnings.toLocaleString(), change: '+12%', icon: AlertTriangle },
+    { id: 'responses', label: 'Response Rate', value: `${realtimeMetrics.responseRate.toFixed(1)}%`, change: '+2.1%', icon: Activity },
+    { id: 'coverage', label: 'Global Coverage', value: realtimeMetrics.globalCoverage.toString(), change: '+8', icon: Globe },
+    { id: 'efficiency', label: 'Network Efficiency', value: `${realtimeMetrics.networkHealth.toFixed(1)}%`, change: '+0.3%', icon: TrendingUp }
+  ];
+
+  const networkMetrics = [
+    { id: 'nodes', label: 'Active Nodes', value: '2,847', change: '+5.2%', icon: Network, status: 'online' },
+    { id: 'throughput', label: 'Network Throughput', value: `${realtimeMetrics.throughput.toFixed(1)} TPS`, change: '+8.1%', icon: Zap, status: 'optimal' },
+    { id: 'latency', label: 'Average Latency', value: `${realtimeMetrics.avgLatency}ms`, change: '-2.3%', icon: Wifi, status: 'good' },
+    { id: 'uptime', label: 'Network Uptime', value: `${realtimeMetrics.uptime.toFixed(2)}%`, change: '+0.01%', icon: Database, status: 'excellent' }
+  ];
+
+  const predictions = [
+    {
+      id: '1',
+      type: 'Flood',
+      location: 'Mumbai, Maharashtra',
+      probability: 85,
+      severity: 'high',
+      timeframe: '24-48 hours',
+      confidence: 92,
+      icon: CloudRain,
+      color: 'blue'
+    },
+    {
+      id: '2', 
+      type: 'Heatwave',
+      location: 'Delhi, NCR',
+      probability: 78,
+      severity: 'medium',
+      timeframe: '3-5 days',
+      confidence: 88,
+      icon: Thermometer,
+      color: 'orange'
+    },
+    {
+      id: '3',
+      type: 'Cyclone',
+      location: 'Odisha Coast',
+      probability: 65,
+      severity: 'critical',
+      timeframe: '5-7 days',
+      confidence: 85,
+      icon: Wind,
+      color: 'purple'
+    },
+    {
+      id: '4',
+      type: 'Drought',
+      location: 'Karnataka',
+      probability: 72,
+      severity: 'medium',
+      timeframe: '2-3 weeks',
+      confidence: 79,
+      icon: Eye,
+      color: 'yellow'
+    }
+  ];
+
+  const renderAnalytics = () => (
+    <>
+      {/* API Status Banner */}
+      <div className="mb-6 bg-slate-800/50 border border-slate-700 rounded-xl p-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-6">
+            <h4 className="text-sm font-medium text-white">Data Sources Status</h4>
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <div className={`w-2 h-2 rounded-full ${apiStatus.system === 'connected' ? 'bg-green-400' : 'bg-yellow-400'}`}></div>
+                <span className="text-xs text-slate-400">System APIs</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className={`w-2 h-2 rounded-full ${apiStatus.network === 'connected' ? 'bg-green-400' : 'bg-yellow-400'}`}></div>
+                <span className="text-xs text-slate-400">Network APIs</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className={`w-2 h-2 rounded-full ${apiStatus.emergency === 'connected' ? 'bg-green-400' : 'bg-yellow-400'}`}></div>
+                <span className="text-xs text-slate-400">Emergency APIs</span>
+              </div>
+            </div>
+          </div>
+          <div className="text-xs text-slate-400">
+            Last updated: {lastUpdated.toLocaleString()}
+          </div>
+        </div>
+      </div>
+
+      {/* Metrics Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        {analyticsMetrics.map((metric, index) => (
+          <div
+            key={metric.id}
+            className={`p-6 rounded-xl border transition-all duration-300 cursor-pointer animate-fade-in-up animation-delay-${index} ${
+              selectedMetric === metric.id
+                ? 'bg-blue-600/20 border-blue-400'
+                : 'bg-slate-800/50 border-slate-700 hover:border-blue-400'
+            }`}
+            onClick={() => setSelectedMetric(metric.id)}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <metric.icon className={`h-8 w-8 ${selectedMetric === metric.id ? 'text-blue-400' : 'text-slate-400'}`} />
+              <span className={`text-sm font-medium ${metric.change.startsWith('+') ? 'text-green-400' : 'text-red-400'}`}>
+                {metric.change}
+              </span>
+            </div>
+            <h3 className="text-2xl font-bold text-white mb-1">{metric.value}</h3>
+            <p className="text-slate-400 text-sm">{metric.label}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Charts Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+        <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-xl font-semibold text-white">Real-Time Performance Trends</h3>
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => setIsLiveMode(!isLiveMode)}
+                className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                  isLiveMode 
+                    ? 'bg-green-600/20 text-green-400 border border-green-500/30' 
+                    : 'bg-slate-600/20 text-slate-400 border border-slate-500/30'
+                }`}
+              >
+                {isLiveMode ? '● LIVE' : '○ PAUSED'}
+              </button>
+              <button
+                onClick={() => {
+                  loadRealData();
+                  showNotification('Chart data refreshed', 'success');
+                }}
+                className="p-1 text-slate-400 hover:text-white transition-colors"
+              >
+                <RefreshCw className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+          <div className="h-80">
+            <ResponsiveContainer width="100%" height="100%">
+              <ComposedChart data={performanceData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                <XAxis 
+                  dataKey="time" 
+                  stroke="#64748b"
+                  fontSize={12}
+                  tick={{ fill: '#64748b' }}
+                />
+                <YAxis 
+                  yAxisId="left"
+                  stroke="#64748b"
+                  fontSize={12}
+                  tick={{ fill: '#64748b' }}
+                />
+                <YAxis 
+                  yAxisId="right"
+                  orientation="right"
+                  stroke="#64748b"
+                  fontSize={12}
+                  tick={{ fill: '#64748b' }}
+                />
+                <Tooltip 
+                  contentStyle={{
+                    backgroundColor: '#1e293b',
+                    border: '1px solid #334155',
+                    borderRadius: '8px',
+                    color: '#f8fafc'
+                  }}
+                />
+                <Legend />
+                <Area
+                  yAxisId="left"
+                  type="monotone"
+                  dataKey="warnings"
+                  stroke="#3b82f6"
+                  fill="#3b82f6"
+                  fillOpacity={0.2}
+                  strokeWidth={2}
+                  name="Warnings"
+                />
+                <Line
+                  yAxisId="right"
+                  type="monotone"
+                  dataKey="responseTime"
+                  stroke="#10b981"
+                  strokeWidth={2}
+                  dot={false}
+                  name="Response Time (ms)"
+                />
+                <Line
+                  yAxisId="left"
+                  type="monotone"
+                  dataKey="throughput"
+                  stroke="#f59e0b"
+                  strokeWidth={2}
+                  dot={false}
+                  name="Throughput (TPS)"
+                />
+                <Bar
+                  yAxisId="left"
+                  dataKey="errorRate"
+                  fill="#ef4444"
+                  fillOpacity={0.6}
+                  name="Error Rate (%)"
+                />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-xl font-semibold text-white">System Resources</h3>
+            <div className="flex items-center space-x-2">
+              <span className="text-xs text-slate-400">Real-time</span>
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            </div>
+          </div>
+          <div className="h-80">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={performanceData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                <XAxis 
+                  dataKey="time" 
+                  stroke="#64748b"
+                  fontSize={12}
+                  tick={{ fill: '#64748b' }}
+                />
+                <YAxis 
+                  stroke="#64748b"
+                  fontSize={12}
+                  tick={{ fill: '#64748b' }}
+                  domain={[0, 100]}
+                />
+                <Tooltip 
+                  contentStyle={{
+                    backgroundColor: '#1e293b',
+                    border: '1px solid #334155',
+                    borderRadius: '8px',
+                    color: '#f8fafc'
+                  }}
+                />
+                <Legend />
+                <Area
+                  type="monotone"
+                  dataKey="cpuUsage"
+                  stackId="1"
+                  stroke="#8b5cf6"
+                  fill="#8b5cf6"
+                  fillOpacity={0.8}
+                  name="CPU Usage (%)"
+                />
+                <Area
+                  type="monotone"
+                  dataKey="memoryUsage"
+                  stackId="1"
+                  stroke="#06b6d4"
+                  fill="#06b6d4"
+                  fillOpacity={0.8}
+                  name="Memory Usage (%)"
+                />
+                <Area
+                  type="monotone"
+                  dataKey="networkLoad"
+                  stackId="1"
+                  stroke="#f97316"
+                  fill="#f97316"
+                  fillOpacity={0.8}
+                  name="Network Load (%)"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+
+  const renderNetwork = () => (
+    <>
+      {/* Network Status Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        {networkMetrics.map((metric, index) => (
+          <div key={metric.id} className={`p-6 rounded-xl border bg-slate-800/50 border-slate-700 hover:border-blue-400 transition-all duration-300 animate-fade-in-up animation-delay-${index}`}>
+            <div className="flex items-center justify-between mb-4">
+              <metric.icon className="h-8 w-8 text-blue-400" />
+              <div className={`px-2 py-1 rounded-full text-xs ${
+                metric.status === 'excellent' ? 'bg-green-600/20 text-green-400' :
+                metric.status === 'good' ? 'bg-blue-600/20 text-blue-400' :
+                metric.status === 'optimal' ? 'bg-purple-600/20 text-purple-400' :
+                'bg-orange-600/20 text-orange-400'
+              }`}>
+                {metric.status}
+              </div>
+            </div>
+            <h3 className="text-2xl font-bold text-white mb-1">{metric.value}</h3>
+            <p className="text-slate-400 text-sm mb-2">{metric.label}</p>
+            <span className={`text-sm font-medium ${metric.change.startsWith('+') ? 'text-green-400' : 'text-red-400'}`}>
+              {metric.change}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {/* Network Map and Details */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-xl font-semibold text-white">Live Network Topology</h3>
+            <div className="flex items-center space-x-2">
+              <span className="text-xs text-green-400">Live Monitoring</span>
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            </div>
+          </div>
+          <div className="h-80">
+            <ResponsiveContainer width="100%" height="100%">
+              <ScatterChart data={networkTopologyData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                <XAxis 
+                  type="number"
+                  dataKey="x"
+                  domain={[70, 90]}
+                  stroke="#64748b"
+                  fontSize={12}
+                  tick={{ fill: '#64748b' }}
+                  name="Longitude"
+                />
+                <YAxis 
+                  type="number"
+                  dataKey="y"
+                  domain={[10, 30]}
+                  stroke="#64748b"
+                  fontSize={12}
+                  tick={{ fill: '#64748b' }}
+                  name="Latitude"
+                />
+                <Tooltip 
+                  cursor={{ strokeDasharray: '3 3' }}
+                  contentStyle={{
+                    backgroundColor: '#1e293b',
+                    border: '1px solid #334155',
+                    borderRadius: '8px',
+                    color: '#f8fafc'
+                  }}
+                  formatter={(value, name) => {
+                    if (name === 'load') return [`${value}%`, 'Load'];
+                    if (name === 'connections') return [value, 'Connections'];
+                    if (name === 'latency') return [`${value}ms`, 'Latency'];
+                    if (name === 'uptime') return [`${value}%`, 'Uptime'];
+                    return [value, name];
+                  }}
+                  labelFormatter={(label, payload) => {
+                    if (payload && payload[0] && payload[0].payload) {
+                      return payload[0].payload.name;
+                    }
+                    return label;
+                  }}
+                />
+                <Scatter 
+                  name="Network Nodes" 
+                  dataKey="load" 
+                  fill="#3b82f6"
+                />
+              </ScatterChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="mt-4 flex items-center justify-between text-xs">
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-1">
+                <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                <span className="text-slate-400">Low Load</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                <span className="text-slate-400">Normal</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                <span className="text-slate-400">High Load</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <div className="w-2 h-2 bg-red-400 rounded-full"></div>
+                <span className="text-slate-400">Critical</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-6">
+          <h3 className="text-xl font-semibold text-white mb-4">Network Performance</h3>
+          <div className="h-80">
+            <ResponsiveContainer width="100%" height="100%">
+              <RadarChart data={networkTopologyData}>
+                <PolarGrid stroke="#334155" />
+                <PolarAngleAxis 
+                  dataKey="name" 
+                  tick={{ fill: '#64748b', fontSize: 12 }}
+                />
+                <PolarRadiusAxis 
+                  angle={90} 
+                  domain={[0, 100]}
+                  tick={{ fill: '#64748b', fontSize: 10 }}
+                />
+                <Radar
+                  name="Load %"
+                  dataKey="load"
+                  stroke="#3b82f6"
+                  fill="#3b82f6"
+                  fillOpacity={0.3}
+                  strokeWidth={2}
+                />
+                <Radar
+                  name="Uptime %"
+                  dataKey="uptime"
+                  stroke="#10b981"
+                  fill="#10b981"
+                  fillOpacity={0.3}
+                  strokeWidth={2}
+                />
+                <Tooltip 
+                  contentStyle={{
+                    backgroundColor: '#1e293b',
+                    border: '1px solid #334155',
+                    borderRadius: '8px',
+                    color: '#f8fafc'
+                  }}
+                />
+                <Legend />
+              </RadarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+
+      {/* Bandwidth Usage Chart */}
+      <div className="mt-8 bg-slate-800/50 border border-slate-700 rounded-xl p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-xl font-semibold text-white">Real-Time Bandwidth Usage</h3>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => showNotification('Bandwidth data exported', 'success')}
+              className="p-2 text-slate-400 hover:text-white transition-colors"
+            >
+              <Download className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => showNotification('Bandwidth report shared', 'info')}
+              className="p-2 text-slate-400 hover:text-white transition-colors"
+            >
+              <Share2 className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+        <div className="h-64">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={performanceData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+              <XAxis 
+                dataKey="time" 
+                stroke="#64748b"
+                fontSize={12}
+                tick={{ fill: '#64748b' }}
+              />
+              <YAxis 
+                stroke="#64748b"
+                fontSize={12}
+                tick={{ fill: '#64748b' }}
+              />
+              <Tooltip 
+                contentStyle={{
+                  backgroundColor: '#1e293b',
+                  border: '1px solid #334155',
+                  borderRadius: '8px',
+                  color: '#f8fafc'
+                }}
+                formatter={(value: number, name: string) => [
+                  `${value} MB/s`, 
+                  name === 'bandwidthIn' ? 'Inbound' : 'Outbound'
+                ]}
+              />
+              <Legend />
+              <Area
+                type="monotone"
+                dataKey="bandwidthIn"
+                stackId="1"
+                stroke="#06b6d4"
+                fill="#06b6d4"
+                fillOpacity={0.8}
+                name="Inbound Traffic"
+              />
+              <Area
+                type="monotone"
+                dataKey="bandwidthOut"
+                stackId="1"
+                stroke="#8b5cf6"
+                fill="#8b5cf6"
+                fillOpacity={0.8}
+                name="Outbound Traffic"
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+    </>
+  );
+
+  const renderPredictions = () => (
+    <>
+      {/* Predictions Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        {predictions.map((prediction) => (
+          <div key={prediction.id} className="bg-slate-800/50 border border-slate-700 rounded-xl p-6 hover:border-blue-400 transition-all duration-300">
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex items-center space-x-3">
+                <prediction.icon className="h-8 w-8 text-blue-400" />
+                <div>
+                  <h3 className="text-lg font-semibold text-white">{prediction.type}</h3>
+                  <p className="text-slate-400 text-sm flex items-center">
+                    <MapPin className="h-3 w-3 mr-1" />
+                    {prediction.location}
+                  </p>
+                </div>
+              </div>
+              <div className={`px-3 py-1 rounded-full text-xs ${
+                prediction.severity === 'critical' ? 'bg-red-600/20 text-red-400' :
+                prediction.severity === 'high' ? 'bg-orange-600/20 text-orange-400' :
+                'bg-yellow-600/20 text-yellow-400'
+              }`}>
+                {prediction.severity}
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-slate-400">Probability</span>
+                <div className="flex items-center space-x-2">
+                  <div className="w-24 bg-slate-700 rounded-full h-2">
+                    <div 
+                      className="bg-blue-400 h-2 rounded-full progress-bar"
+                      data-width={prediction.probability}
+                    />
+                  </div>
+                  <span className="text-white font-medium">{prediction.probability}%</span>
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <span className="text-slate-400">Confidence</span>
+                <span className="text-white font-medium">{prediction.confidence}%</span>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <span className="text-slate-400">Timeframe</span>
+                <span className="text-white font-medium">{prediction.timeframe}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ML Model Performance */}
+      <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-6">
+        <h3 className="text-xl font-semibold text-white mb-4">AI Model Performance</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[
+            { metric: 'Accuracy', value: '94.7%', trend: '+2.1%' },
+            { metric: 'Precision', value: '92.3%', trend: '+1.8%' },
+            { metric: 'Recall', value: '96.1%', trend: '+0.9%' }
+          ].map((metric) => (
+            <div key={metric.metric} className="text-center">
+              <div className="text-3xl font-bold text-white mb-1">{metric.value}</div>
+              <div className="text-slate-400 text-sm mb-2">{metric.metric}</div>
+              <div className="text-green-400 text-sm">{metric.trend}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+
+  return (
+    <div className="min-h-screen pt-8 pb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8 animate-fade-in-up">
+          <div>
+            <h1 className="text-4xl font-bold text-white mb-2">Real-Time Analytics Hub</h1>
+            <p className="text-slate-400">Live monitoring with external API integration and intelligent fallbacks</p>
+          </div>
+          
+          <div className="flex items-center space-x-4">
+            <select
+              value={timeRange}
+              onChange={(e) => setTimeRange(e.target.value)}
+              aria-label="Select time range for analytics"
+              className="px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="24h">Last 24 Hours</option>
+              <option value="7d">Last 7 Days</option>
+              <option value="30d">Last 30 Days</option>
+              <option value="90d">Last 90 Days</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Tab Navigation */}
+        <div className="flex space-x-1 mb-8 bg-slate-800/50 p-1 rounded-lg border border-slate-700">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-all duration-200 ${
+                activeTab === tab.id
+                  ? 'bg-blue-600 text-white'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-700'
+              }`}
+            >
+              <tab.icon className="h-4 w-4" />
+              <span>{tab.label}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Tab Content */}
+        {activeTab === 'analytics' && renderAnalytics()}
+        {activeTab === 'network' && renderNetwork()}
+        {activeTab === 'prediction' && renderPredictions()}
+      </div>
+
+      {/* Floating Action Buttons */}
+      <div className="fixed bottom-6 right-6 flex flex-col space-y-3 z-40">
+        <button
+          onClick={() => {
+            loadRealData();
+            showNotification('Analytics data refreshed successfully', 'success');
+          }}
+          className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110 group"
+          title="Refresh Data"
+        >
+          <RefreshCw className="h-6 w-6 group-hover:animate-spin" />
+        </button>
+        
+        <button
+          onClick={() => showNotification('Analytics report downloaded', 'success')}
+          className="bg-green-600 hover:bg-green-700 text-white p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
+          title="Download Report"
+        >
+          <Download className="h-6 w-6" />
+        </button>
+        
+        <button
+          onClick={() => showNotification('Analytics dashboard shared', 'info')}
+          className="bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
+          title="Share Dashboard"
+        >
+          <Share2 className="h-6 w-6" />
+        </button>
+        
+        <button
+          onClick={() => showNotification('Settings panel coming soon', 'info')}
+          className="bg-slate-600 hover:bg-slate-700 text-white p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
+          title="Settings"
+        >
+          <Settings className="h-6 w-6" />
+        </button>
+        
+        <button
+          onClick={() => showNotification('You have 5 new alerts!', 'warning')}
+          className="bg-yellow-600 hover:bg-yellow-700 text-white p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110 relative"
+          title="Notifications"
+        >
+          <Bell className="h-6 w-6" />
+          <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+        </button>
+      </div>
+    </div>
+  );
+};

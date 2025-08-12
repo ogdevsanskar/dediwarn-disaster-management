@@ -1,0 +1,44 @@
+{
+  "name": "DeDiWARN - Disaster Management Platform",
+  "short_name": "DeDiWARN",
+  "description": "Real-time disaster management and emergency response platform",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#dc2626",
+  "orientation": "portrait-primary",
+  "categories": ["emergency", "safety", "productivity"],
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Emergency Alert",
+      "short_name": "Alert",
+      "description": "Send emergency alert",
+      "url": "/emergency?action=alert",
+      "icons": [{ "src": "/emergency-icon.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Live Map",
+      "short_name": "Map",
+      "description": "View live disaster map",
+      "url": "/map",
+      "icons": [{ "src": "/map-icon.png", "sizes": "96x96" }]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}

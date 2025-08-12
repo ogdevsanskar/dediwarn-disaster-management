@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeDiWARN - Offline</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        .offline-container {
+            text-align: center;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .offline-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0 0 20px 0;
+            font-size: 2rem;
+        }
+        p {
+            margin: 0 0 30px 0;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        .emergency-info {
+            background: rgba(220, 38, 38, 0.2);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .emergency-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fef2f2;
+        }
+        .retry-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .retry-btn:hover {
+            background: #b91c1c;
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <div class="offline-icon">📶❌</div>
+        <h1>You're Offline</h1>
+        <p>Don't worry! Essential emergency features are still available offline.</p>
+        
+        <div class="emergency-info">
+            <div class="emergency-number">🚨 Emergency: 911</div>
+            <div class="emergency-number">🚑 Medical: 108</div>
+            <div class="emergency-number">🚒 Fire: 101</div>
+            <div class="emergency-number">👮 Police: 100</div>
+        </div>
+        
+        <p>Your location and emergency reports will be synced when you're back online.</p>
+        
+        <button class="retry-btn" onclick="window.location.reload()">
+            Try Again
+        </button>
+    </div>
+
+    <script>
+        // Check for network connectivity
+        window.addEventListener('online', () => {
+            window.location.reload();
+        });
+        
+        // Register service worker if not already done
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js');
+        }
+    </script>
+</body>
+</html>
