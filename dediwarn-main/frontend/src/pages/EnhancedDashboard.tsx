@@ -38,12 +38,19 @@ interface SatelliteData {
     seaLevel?: number;
     vegetation?: number;
     deforestation?: number;
+    coralBleaching?: number;
+    plasticWaste?: number;
+    forestLoss?: number;
+    carbonEmissions?: number;
+    co2Levels?: number;
+    ghgEmissions?: number;
+    carbonSinks?: number;
   };
 }
 
 interface HotspotData {
   id: string;
-  type: 'wildfire' | 'flood' | 'pollution' | 'deforestation' | 'coral-bleaching';
+  type: 'wildfire' | 'flood' | 'pollution' | 'deforestation' | 'coral-bleaching' | 'plastic-waste' | 'ghg-emissions';
   location: {
     name: string;
     coordinates: [number, number];
@@ -150,6 +157,48 @@ const EnhancedDashboard: React.FC = () => {
           seaLevel: 2.3,
           temperature: 16.2
         }
+      },
+      {
+        id: 'modis-aqua',
+        name: 'MODIS-Aqua',
+        type: 'ocean',
+        lastUpdate: new Date(Date.now() - 45 * 60 * 1000),
+        status: 'active',
+        coverage: 'Global Ocean Health',
+        resolution: '1km',
+        dataPoints: {
+          coralBleaching: 23.7,
+          plasticWaste: 12.4,
+          temperature: 18.9
+        }
+      },
+      {
+        id: 'landsat-8',
+        name: 'Landsat-8',
+        type: 'environmental',
+        lastUpdate: new Date(Date.now() - 30 * 60 * 1000),
+        status: 'active',
+        coverage: 'Global Forest Watch',
+        resolution: '30m',
+        dataPoints: {
+          forestLoss: 8.2,
+          deforestation: 5.6,
+          carbonEmissions: 145.3
+        }
+      },
+      {
+        id: 'oco-2',
+        name: 'OCO-2',
+        type: 'environmental',
+        lastUpdate: new Date(Date.now() - 20 * 60 * 1000),
+        status: 'active',
+        coverage: 'Global Carbon',
+        resolution: '2.25km',
+        dataPoints: {
+          co2Levels: 421.4,
+          ghgEmissions: 89.7,
+          carbonSinks: 34.2
+        }
       }
     ]);
   };
@@ -194,6 +243,45 @@ const EnhancedDashboard: React.FC = () => {
         population: 1200,
         firstDetected: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
         lastUpdate: new Date(Date.now() - 60 * 60 * 1000)
+      },
+      {
+        id: 'hotspot-4',
+        type: 'coral-bleaching',
+        location: { name: 'Great Barrier Reef', coordinates: [-18.2871, 147.6992] },
+        severity: 'high',
+        trend: 'worsening',
+        detectedBy: ['MODIS-Aqua', 'Ocean Health Index', 'Marine Surveys'],
+        confidence: 89,
+        affectedArea: 890,
+        population: 0,
+        firstDetected: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+        lastUpdate: new Date(Date.now() - 2 * 60 * 60 * 1000)
+      },
+      {
+        id: 'hotspot-5',
+        type: 'plastic-waste',
+        location: { name: 'Pacific Gyre', coordinates: [35.0, -140.0] },
+        severity: 'critical',
+        trend: 'stable',
+        detectedBy: ['Ocean Cleanup Sensors', 'Satellite Imagery', 'Research Vessels'],
+        confidence: 91,
+        affectedArea: 15000000,
+        population: 0,
+        firstDetected: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+        lastUpdate: new Date(Date.now() - 4 * 60 * 60 * 1000)
+      },
+      {
+        id: 'hotspot-6',
+        type: 'ghg-emissions',
+        location: { name: 'Industrial Zone, China', coordinates: [39.9042, 116.4074] },
+        severity: 'high',
+        trend: 'stable',
+        detectedBy: ['OCO-2', 'UNEP Monitoring', 'Ground Stations'],
+        confidence: 94,
+        affectedArea: 580,
+        population: 2100000,
+        firstDetected: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
+        lastUpdate: new Date(Date.now() - 90 * 60 * 1000)
       }
     ]);
   };
@@ -227,14 +315,16 @@ const EnhancedDashboard: React.FC = () => {
     ]);
   };
 
-  const getHotspotIcon = (type: string) => {
+    const getHotspotIcon = (type: string) => {
     switch (type) {
-      case 'wildfire': return { icon: <Activity className="h-4 w-4" />, color: 'text-red-400' };
+      case 'wildfire': return { icon: <Zap className="h-4 w-4" />, color: 'text-red-400' };
       case 'flood': return { icon: <Droplets className="h-4 w-4" />, color: 'text-blue-400' };
       case 'pollution': return { icon: <Wind className="h-4 w-4" />, color: 'text-gray-400' };
       case 'deforestation': return { icon: <Target className="h-4 w-4" />, color: 'text-green-400' };
-      case 'coral-bleaching': return { icon: <Globe className="h-4 w-4" />, color: 'text-cyan-400' };
-      default: return { icon: <AlertTriangle className="h-4 w-4" />, color: 'text-yellow-400' };
+      case 'coral-bleaching': return { icon: <Droplets className="h-4 w-4" />, color: 'text-cyan-400' };
+      case 'plastic-waste': return { icon: <Wind className="h-4 w-4" />, color: 'text-purple-400' };
+      case 'ghg-emissions': return { icon: <Activity className="h-4 w-4" />, color: 'text-orange-400' };
+      default: return { icon: <Globe className="h-4 w-4" />, color: 'text-gray-400' };
     }
   };
 
@@ -537,7 +627,14 @@ const EnhancedDashboard: React.FC = () => {
                                key.includes('precipitation') ? ' mm' : 
                                key.includes('vegetation') ? '%' : 
                                key.includes('deforestation') ? '%' : 
-                               key.includes('seaLevel') ? ' mm' : ''}
+                               key.includes('seaLevel') ? ' mm' :
+                               key.includes('coralBleaching') ? '%' :
+                               key.includes('plasticWaste') ? ' MT/km²' :
+                               key.includes('forestLoss') ? '%' :
+                               key.includes('carbonEmissions') ? ' ppm' :
+                               key.includes('co2Levels') ? ' ppm' :
+                               key.includes('ghgEmissions') ? ' GT' :
+                               key.includes('carbonSinks') ? ' GT' : ''}
                             </span>
                           </div>
                         ))}

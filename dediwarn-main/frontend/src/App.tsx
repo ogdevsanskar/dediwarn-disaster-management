@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { Home } from './pages/Home';
+import LandingPage from './pages/LandingPage';
 import { Warnings } from './pages/Warnings';
 import { SmartContracts } from './pages/SmartContracts';
 import AdvancedAnalytics from './pages/AdvancedAnalytics';
@@ -140,7 +141,7 @@ function App() {
       id: Date.now(),
       type: 'app_update' as const,
       title: 'App Update Available',
-      message: 'A new version of DeDiWARN is available. Refresh to update.',
+      message: 'A new version of ClimaAid is available. Refresh to update.',
       severity: 'medium' as const,
       timestamp: new Date().toISOString(),
       actions: [
@@ -155,7 +156,7 @@ function App() {
     const notification = {
       id: Date.now(),
       type: 'app_install' as const,
-      title: 'Install DeDiWARN',
+      title: 'Install ClimaAid',
       message: 'Install the app for faster access and offline capabilities.',
       severity: 'low' as const,
       timestamp: new Date().toISOString(),
@@ -225,9 +226,10 @@ function App() {
         
         <main className={`relative z-10 ${!isOnline ? 'pt-12' : ''}`}>
           <Routes>
-            <Route path="/" element={<MainDashboard userLocation={userLocation} />} />
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/dashboard" element={<MainDashboard userLocation={userLocation} />} />
             <Route path="/home" element={<Home />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/main-dashboard" element={<Dashboard />} />
             <Route path="/report-incident" element={<ReportIncident />} />
             <Route path="/warnings" element={<Warnings />} />
             <Route path="/contracts" element={<SmartContracts />} />
@@ -252,7 +254,7 @@ function App() {
                   <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                     <span className="text-white font-bold text-sm">D</span>
                   </div>
-                  <h3 className="text-lg font-semibold text-white">DeDiWARN</h3>
+                  <h3 className="text-lg font-semibold text-white">ClimaAid</h3>
                 </div>
                 <p className="text-slate-400 mb-4">
                   Decentralized digital warning system powered by blockchain technology for a safer world.
@@ -315,7 +317,7 @@ function App() {
             
             <div className="border-t border-slate-700 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center animate-fade-in-up animation-delay-500">
               <p className="text-slate-400 text-center md:text-left">
-                &copy; 2024 DeDiWARN. All rights reserved. Built with ❤️ for a safer world.
+                &copy; 2024 ClimaAid. All rights reserved. Built with ❤️ for a safer world.
               </p>
               <div className="flex items-center space-x-6 mt-4 md:mt-0">
                 <a href="#" className="text-slate-400 hover:text-blue-400 transition-colors">Privacy Policy</a>

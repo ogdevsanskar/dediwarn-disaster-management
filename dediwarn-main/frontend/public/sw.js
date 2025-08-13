@@ -1,7 +1,7 @@
 // Service Worker for PWA functionality
-const CACHE_NAME = 'dediwarn-v1';
-const STATIC_CACHE = 'dediwarn-static-v1';
-const DYNAMIC_CACHE = 'dediwarn-dynamic-v1';
+const CACHE_NAME = 'climaaid-v1';
+const STATIC_CACHE = 'climaaid-static-v1';
+const DYNAMIC_CACHE = 'climaaid-dynamic-v1';
 
 // Static assets to cache
 const STATIC_ASSETS = [
@@ -160,7 +160,7 @@ self.addEventListener('push', (event) => {
   };
 
   event.waitUntil(
-    self.registration.showNotification('DeDiWARN Emergency Alert', options)
+    self.registration.showNotification('ClimaAid Emergency Alert', options)
   );
 });
 
@@ -217,7 +217,7 @@ async function syncLocationUpdates() {
 // IndexedDB helpers for offline storage
 function openDB() {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open('DeDiWARN_OfflineDB', 1);
+    const request = indexedDB.open('ClimaAid_OfflineDB', 1);
     
     request.onerror = () => reject(request.error);
     request.onsuccess = () => resolve(request.result);

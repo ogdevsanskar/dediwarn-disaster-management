@@ -1,6 +1,6 @@
 {
-  "name": "DeDiWARN - Disaster Management Platform",
-  "short_name": "DeDiWARN",
+  "name": "ClimaAid - Climate Aid Platform",
+  "short_name": "ClimaAid",
   "description": "Real-time disaster management and emergency response platform",
   "start_url": "/",
   "display": "standalone",

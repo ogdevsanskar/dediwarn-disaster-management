@@ -2,7 +2,12 @@ import * as express from 'express';
 import { Request, Response } from 'express';
 import axios from 'axios';
 import rateLimit from 'express-rate-limit';
-import { Server } from 'socket.io';
+// import { Server } from 'socket.io'; // Commented out - server-side only
+
+// Type definition for Socket.io Server (for reference only in frontend)
+interface SocketServer {
+  emit: (event: string, data: unknown) => void;
+}
 
 // Type definitions for API responses
 interface EarthquakeFeature {
@@ -195,7 +200,7 @@ router.get('/api/weather-alerts', async (req: express.Request, res: express.Resp
 
     const response = await axios.get(url, {
       headers: {
-        'User-Agent': '(DeDiWARN Emergency System, emergency@dediwarn.com)'
+        'User-Agent': '(ClimaAid Emergency System, emergency@climaaid.com)'
       },
       timeout: 10000
     });
@@ -539,7 +544,7 @@ function mapTrafficSeverity(criticality: string): string {
 }
 
 // WebSocket setup for real-time updates
-export const setupRealTimeUpdates = (io: Server) => {
+export const setupRealTimeUpdates = (io: SocketServer) => {
   // Update earthquake data every 5 minutes
   setInterval(async () => {
     try {
@@ -566,7 +571,7 @@ export const setupRealTimeUpdates = (io: Server) => {
     try {
       const response = await axios.get('https://api.weather.gov/alerts/active', {
         headers: {
-          'User-Agent': '(DeDiWARN Emergency System, emergency@dediwarn.com)'
+          'User-Agent': '(ClimaAid Emergency System, emergency@climaaid.com)'
         }
       });
       

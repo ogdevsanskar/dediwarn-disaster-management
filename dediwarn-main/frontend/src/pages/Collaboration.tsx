@@ -268,10 +268,18 @@ const Collaboration: React.FC = () => {
         <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm transition-colors">
           View Details
         </button>
-        <button className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-sm transition-colors">
+        <button 
+          className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-sm transition-colors"
+          aria-label="Add to favorites"
+          title="Add to favorites"
+        >
           <Heart className="h-4 w-4" />
         </button>
-        <button className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-sm transition-colors">
+        <button 
+          className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-sm transition-colors"
+          aria-label="Share project"
+          title="Share project"
+        >
           <Share2 className="h-4 w-4" />
         </button>
       </div>
@@ -313,7 +321,11 @@ const Collaboration: React.FC = () => {
         <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm transition-colors">
           Connect
         </button>
-        <button className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-sm transition-colors">
+        <button 
+          className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-sm transition-colors"
+          aria-label="Send message"
+          title="Send message"
+        >
           <MessageSquare className="h-4 w-4" />
         </button>
       </div>
@@ -321,17 +333,17 @@ const Collaboration: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900 py-20 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-6">
+        <div className="mb-8 animate-fade-in-up">
+          <div className="bg-slate-800/30 backdrop-blur-sm border border-slate-600 rounded-2xl p-8 shadow-2xl shadow-blue-500/10">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h1 className="text-3xl font-bold text-white mb-2">
-                  Global Collaboration Hub
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent mb-2">
+                  🤝 Global Collaboration Hub
                 </h1>
-                <p className="text-gray-400">
+                <p className="text-slate-300 text-xl">
                   Unite governments, NGOs, researchers, and communities for environmental resilience
                 </p>
               </div>
@@ -443,6 +455,10 @@ const Collaboration: React.FC = () => {
                       <option value="marine-ecosystem">Marine Ecosystem</option>
                       <option value="biodiversity">Biodiversity</option>
                       <option value="climate-adaptation">Climate Adaptation</option>
+                      <option value="deforestation">Deforestation Prevention</option>
+                      <option value="coral-protection">Coral Reef Protection</option>
+                      <option value="carbon-capture">Carbon Capture</option>
+                      <option value="plastic-cleanup">Ocean Plastic Cleanup</option>
                       <option value="education">Education</option>
                     </select>
                   </div>
@@ -487,6 +503,10 @@ const Collaboration: React.FC = () => {
                       <option value="marine-ecosystem">Marine Ecosystem</option>
                       <option value="biodiversity">Biodiversity</option>
                       <option value="climate-adaptation">Climate Adaptation</option>
+                      <option value="deforestation">Deforestation Prevention</option>
+                      <option value="coral-protection">Coral Reef Protection</option>
+                      <option value="carbon-capture">Carbon Capture</option>
+                      <option value="plastic-cleanup">Ocean Plastic Cleanup</option>
                       <option value="education">Education</option>
                     </select>
                   </div>

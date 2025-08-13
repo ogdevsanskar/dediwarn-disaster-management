@@ -300,13 +300,13 @@ const EducationGamification: React.FC = () => {
       if (navigator.share) {
         await navigator.share({
           title: 'My Climate Education Progress',
-          text: `I'm Level ${userProgress.level} with ${userProgress.totalPoints} points on DeDiWARN Education!`,
+          text: `I'm Level ${userProgress.level} with ${userProgress.totalPoints} points on ClimaAid Education!`,
           url: window.location.href
         });
       } else {
         // Fallback to clipboard
         await navigator.clipboard.writeText(
-          `I'm Level ${userProgress.level} with ${userProgress.totalPoints} points on DeDiWARN Education! ${window.location.href}`
+          `I'm Level ${userProgress.level} with ${userProgress.totalPoints} points on ClimaAid Education! ${window.location.href}`
         );
         showNotification('Progress shared to clipboard!', 'success');
       }
@@ -1156,6 +1156,8 @@ const EducationGamification: React.FC = () => {
                 <button
                   onClick={closeVideoPlayer}
                   className="p-2 hover:bg-slate-700 rounded-lg transition-colors"
+                  aria-label="Close video player"
+                  title="Close video player"
                 >
                   <X className="h-5 w-5 text-white" />
                 </button>
@@ -1229,6 +1231,8 @@ const EducationGamification: React.FC = () => {
               <button
                 onClick={() => setNotification(prev => ({ ...prev, isVisible: false }))}
                 className="text-gray-400 hover:text-white transition-colors"
+                aria-label="Dismiss notification"
+                title="Dismiss notification"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -1242,6 +1246,8 @@ const EducationGamification: React.FC = () => {
         onClick={refreshData}
         disabled={isLoading}
         className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110 z-40"
+        aria-label="Refresh data"
+        title="Refresh data"
       >
         <RefreshCw className={`h-6 w-6 ${isLoading ? 'animate-spin' : ''}`} />
       </button>
@@ -1250,6 +1256,8 @@ const EducationGamification: React.FC = () => {
       <button
         onClick={() => showNotification('Settings panel coming soon!', 'info')}
         className="fixed bottom-6 right-20 bg-slate-700 hover:bg-slate-600 text-white p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110 z-40"
+        aria-label="Open settings"
+        title="Open settings"
       >
         <Settings className="h-6 w-6" />
       </button>
@@ -1258,6 +1266,8 @@ const EducationGamification: React.FC = () => {
       <button
         onClick={() => showNotification('You have 3 new achievements!', 'success')}
         className="fixed bottom-6 right-32 bg-yellow-600 hover:bg-yellow-700 text-white p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110 z-40"
+        aria-label="View notifications"
+        title="View notifications"
       >
         <Bell className="h-6 w-6" />
       </button>

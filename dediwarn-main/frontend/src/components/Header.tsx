@@ -2,52 +2,60 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Shield, Menu, X } from 'lucide-react';
 import { WalletConnect } from './WalletConnect';
+import theme from '../styles/theme';
 
 export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
 
   const mainNavItems = [
-    { name: 'Dashboard', path: '/' },
-    { name: 'Global Hub', path: '/enhanced-dashboard' },
-    { name: 'Collaboration', path: '/collaboration' },
-    { name: 'Contracts', path: '/contracts' },
-    { name: 'Analytics Hub', path: '/analytics' },
-    { name: 'Emergency Center', path: '/emergency-communication' },
-    { name: 'Donations', path: '/donations' },
-    { name: 'Education', path: '/education' },
+    { name: 'Home', path: '/', icon: '🏠' },
+    { name: 'Global Hub', path: '/enhanced-dashboard', icon: '🌍' },
+    { name: 'Collaboration', path: '/collaboration', icon: '🤝' },
+    { name: 'Analytics', path: '/analytics', icon: '📊' },
+    { name: 'Emergency', path: '/emergency-communication', icon: '🚨' },
+    { name: 'Education', path: '/education', icon: '🎓' },
+    { name: 'Donations', path: '/donations', icon: '💝' },
   ];
 
   return (
-    <header className="bg-slate-900/95 backdrop-blur-md border-b border-slate-700/50 sticky top-0 z-50 shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <header className={`${theme.backgrounds.glass} border-b ${theme.borders.default} sticky top-0 z-50 ${theme.shadows.glow}`}>
+      <div className={`${theme.spacing.containerMax} px-4 sm:px-6 lg:px-8`}>
         <div className="flex justify-between items-center h-16">
-          <Link to="/" className="flex items-center space-x-2 xl:space-x-3 group flex-shrink-0">
+          {/* Logo */}
+          <Link to="/" className="flex items-center space-x-3 group flex-shrink-0">
             <div className="relative">
-              <Shield className="h-6 xl:h-7 w-6 xl:w-7 text-blue-500 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300" />
-              <div className="absolute inset-0 bg-blue-500 opacity-20 rounded-full blur-lg group-hover:opacity-40 transition-opacity" />
+              <div className={`w-10 h-10 ${theme.backgrounds.card} rounded-xl flex items-center justify-center ${theme.hover.scale} ${theme.borders.accent}`}>
+                <Shield className="h-6 w-6 text-blue-400 group-hover:text-blue-300 transition-colors" />
+              </div>
+              <div className="absolute inset-0 bg-blue-500 opacity-20 rounded-xl blur-lg group-hover:opacity-40 transition-opacity" />
             </div>
-            <span className="text-lg xl:text-xl font-bold text-white bg-gradient-to-r from-blue-400 via-purple-500 to-cyan-400 bg-clip-text text-transparent group-hover:scale-105 transition-transform duration-200">
-              DeDiWARN
-            </span>
+            <div className="flex flex-col">
+              <span className={`text-xl font-bold ${theme.text.gradient.primary} group-hover:scale-105 transition-transform duration-200`}>
+                ClimaAid
+              </span>
+              <span className="text-xs text-slate-400">Climate Aid Platform</span>
+            </div>
           </Link>
 
-          <nav className="hidden md:flex items-center justify-center space-x-1 flex-1 mx-2 xl:mx-6">
-            <div className="flex items-center justify-center space-x-1 bg-slate-800/50 rounded-xl p-1.5 xl:p-2 backdrop-blur-sm border border-slate-700/30">
+          {/* Desktop Navigation */}
+          <nav className="hidden lg:flex items-center justify-center space-x-2 flex-1 mx-8">
+            <div className={`flex items-center justify-center space-x-1 ${theme.backgrounds.glassCard} rounded-2xl p-2`}>
               {mainNavItems.map((item, index) => (
                 <Link
                   key={item.name}
                   to={item.path}
-                  className={`relative px-3 xl:px-4 py-2 xl:py-2.5 text-sm xl:text-sm rounded-lg transition-all duration-300 group whitespace-nowrap flex items-center font-medium ${
+                  className={`relative px-4 py-2.5 text-sm rounded-xl transition-all duration-300 group whitespace-nowrap flex items-center font-medium space-x-2 ${
                     location.pathname === item.path
-                      ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-600/25 scale-105'
-                      : 'text-slate-300 hover:text-white hover:bg-slate-700/70 hover:scale-105'
+                      ? `bg-gradient-to-r ${theme.gradients.primary} text-white shadow-lg ${theme.shadows.glow} scale-105`
+                      : `${theme.text.secondary} hover:text-white hover:bg-slate-700/70 ${theme.hover.scale}`
                   }`}
                   style={{ animationDelay: `${index * 75}ms` }}
                 >
+                  <span className="text-lg">{item.icon}</span>
                   <span>{item.name}</span>
                   {location.pathname === item.path && (
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-lg blur-xl" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-xl blur-xl" />
                   )}
                   <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-500 group-hover:w-full transition-all duration-500" />
                 </Link>
@@ -55,14 +63,26 @@ export const Header: React.FC = () => {
             </div>
           </nav>
 
-          <div className="flex items-center space-x-2 xl:space-x-4 flex-shrink-0 min-w-fit">
+          {/* Right Side Actions */}
+          <div className="flex items-center space-x-4 flex-shrink-0">
+            {/* Emergency Button */}
+            <Link
+              to="/emergency-communication"
+              className={`hidden md:flex items-center space-x-2 px-4 py-2 bg-gradient-to-r ${theme.gradients.danger} rounded-xl font-semibold ${theme.hover.scale} ${theme.shadows.glowRed}`}
+            >
+              <span>🚨</span>
+              <span>Emergency</span>
+            </Link>
+
+            {/* Wallet Connect */}
             <div className="hidden md:block">
               <WalletConnect />
             </div>
             
+            {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden p-2.5 rounded-xl hover:bg-slate-700/70 transition-all duration-200 border border-slate-600/30 hover:border-slate-500/50"
+              className={`lg:hidden p-3 rounded-xl ${theme.backgrounds.cardHover} transition-all duration-200 ${theme.borders.default} hover:border-blue-400`}
             >
               {isMenuOpen ? 
                 <X className="h-6 w-6 text-white" /> : 
@@ -73,27 +93,40 @@ export const Header: React.FC = () => {
         </div>
       </div>
 
+      {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden bg-slate-900/98 backdrop-blur-md border-t border-slate-700/50 animate-slide-down shadow-2xl">
-          <div className="px-4 py-4 space-y-3 max-h-96 overflow-y-auto">
+        <div className={`lg:hidden ${theme.backgrounds.glass} border-t ${theme.borders.default} animate-slide-down ${theme.shadows['2xl']}`}>
+          <div className="px-4 py-6 space-y-4 max-h-96 overflow-y-auto">
+            {/* Emergency Button Mobile */}
+            <Link
+              to="/emergency-communication"
+              className={`flex items-center justify-center space-x-2 py-3 px-4 bg-gradient-to-r ${theme.gradients.danger} rounded-xl font-semibold ${theme.hover.scale} mb-4`}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <span>🚨</span>
+              <span>Emergency Alert</span>
+            </Link>
+
             {/* Wallet Connect in mobile menu */}
-            <div className="pb-3 border-b border-slate-700/50">
+            <div className="pb-4 border-b border-slate-700/50">
               <WalletConnect />
             </div>
             
+            {/* Navigation Items */}
             {mainNavItems.map((item, index) => (
               <Link
                 key={item.name}
                 to={item.path}
-                className={`flex items-center justify-between py-3 px-4 rounded-xl transition-all duration-200 ${
+                className={`flex items-center space-x-3 py-3 px-4 rounded-xl transition-all duration-200 ${
                   location.pathname === item.path
-                    ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-600/25'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-700/70 active:scale-95'
+                    ? `bg-gradient-to-r ${theme.gradients.primary} text-white ${theme.shadows.glow}`
+                    : `${theme.text.secondary} hover:text-white hover:bg-slate-700/70 active:scale-95`
                 }`}
                 onClick={() => setIsMenuOpen(false)}
                 style={{ animationDelay: `${index * 50}ms` }}
               >
-                <span className="font-medium">{item.name}</span>
+                <span className="text-xl">{item.icon}</span>
+                <span className="font-medium flex-1">{item.name}</span>
                 {location.pathname === item.path && (
                   <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
                 )}
