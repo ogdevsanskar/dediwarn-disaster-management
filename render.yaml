@@ -4,9 +4,11 @@ services:
     name: dediwarn-backend
     env: node
     plan: free
+    region: oregon
     rootDir: backend
-    buildCommand: npm install && npm run build
+    buildCommand: npm ci && npm run build
     startCommand: npm start
+    healthCheckPath: /api/status
     envVars:
       - key: NODE_ENV
         value: production
@@ -16,16 +18,22 @@ services:
         value: https://dediwarn-frontend.onrender.com
       - key: OPENWEATHER_API_KEY
         value: demo_key
+      - key: FRONTEND_URL
+        value: https://dediwarn-frontend.onrender.com
 
   # Frontend Service (Static Site)
   - type: web
     name: dediwarn-frontend
     env: static
+    region: oregon
     rootDir: frontend
-    buildCommand: npm install && npm run build
+    buildCommand: npm ci && npm run build
     staticPublishPath: dist
+    pullRequestPreviewsEnabled: false
     envVars:
       - key: NODE_ENV
         value: production
       - key: VITE_API_URL
         value: https://dediwarn-backend.onrender.com
+      - key: VITE_WEBSOCKET_URL
+        value: wss://dediwarn-backend.onrender.com
