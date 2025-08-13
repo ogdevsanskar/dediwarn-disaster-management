@@ -1,0 +1,57 @@
+{
+  "name": "disaster-management-app",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Disaster Management Application - Full Stack (React + Express + TypeScript)",
+  "engines": {
+    "node": ">=20.11.0",
+    "npm": ">=10.0.0"
+  },
+  "scripts": {
+    "install:frontend": "cd frontend && npm install",
+    "install:backend": "cd backend && npm install",  
+    "install:all": "npm run install:frontend && npm run install:backend",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:full": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "build:frontend": "npm install && cd frontend && npm install && npm run build",
+    "build:backend": "npm install && cd backend && npm install && npm run build",
+    "build:all": "npm run build:backend && npm run build:frontend",
+    "build": "npm run build:frontend",
+    "start:backend": "cd backend && npm start",
+    "start:frontend": "cd frontend && npm run preview", 
+    "start:all": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
+    "lint:frontend": "cd frontend && npm run lint",
+    "lint:backend": "cd backend && npm run lint",
+    "lint:all": "npm run lint:backend && npm run lint:frontend"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/methods": "^1.1.4",
+    "@types/ms": "^2.1.0",
+    "@types/node": "^24.2.0",
+    "@types/socket.io": "^3.0.1",
+    "@types/supertest": "^6.0.3",
+    "concurrently": "^8.2.2",
+    "supertest": "^7.1.4"
+  },
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "keywords": [
+    "disaster-management",
+    "fullstack",
+    "react",
+    "express",
+    "typescript"
+  ],
+  "author": "SANSKAR",
+  "license": "MIT",
+  "dependencies": {
+    "@types/three": "^0.179.0",
+    "socket.io": "^4.8.1",
+    "three": "^0.179.1"
+  }
+}
