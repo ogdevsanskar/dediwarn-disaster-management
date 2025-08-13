@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import GlobalMap from './GlobalMap';
 import {
   fetchGlobalEnvironmentalData,
   FIRMSFire,
@@ -37,6 +38,7 @@ const GlobalEnvironmentalHub: React.FC = () => {
   const [globalData, setGlobalData] = useState<GlobalData | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedRegion, setSelectedRegion] = useState({ lat: 0, lon: 0, name: 'Global' });
+  const [trackingEnabled, setTrackingEnabled] = useState(false);
 
   const regions = [
     { lat: 0, lon: 0, name: 'Global' },
@@ -216,6 +218,35 @@ const GlobalEnvironmentalHub: React.FC = () => {
               </div>
             </motion.div>
           </div>
+
+          {/* Interactive Global Map */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="bg-slate-800/60 backdrop-blur-sm rounded-xl p-6 border border-slate-700/50"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <MapPin className="h-6 w-6 text-emerald-400" />
+                <h2 className="text-xl font-semibold">Global Resource & Disaster Tracking</h2>
+              </div>
+              <div className="text-sm text-slate-400">
+                Live OpenStreetMap Integration
+              </div>
+            </div>
+            <GlobalMap
+              fires={globalData.fires}
+              disasters={globalData.disasters}
+              events={globalData.events}
+              trackingEnabled={trackingEnabled}
+              onTrackingToggle={() => setTrackingEnabled(!trackingEnabled)}
+              onMarkerClick={(marker) => {
+                console.log('Marker clicked:', marker);
+                // You can add more interaction logic here
+              }}
+            />
+          </motion.div>
 
           {/* Main Content Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
