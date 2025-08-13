@@ -1,25 +1,36 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
 import { Header } from './components/Header';
 import { Home } from './pages/Home';
 import LandingPage from './pages/LandingPage';
 import { Warnings } from './pages/Warnings';
-import { SmartContracts } from './pages/SmartContracts';
-import AdvancedAnalytics from './pages/AdvancedAnalytics';
-import { EmergencyCenter } from './pages/EmergencyCenter';
-import { Donations } from './pages/Donations';
-import { Volunteers } from './pages/Volunteers';
 import { Dashboard } from './components/Dashboard';
 import { MainDashboard } from './components/MainDashboard';
 import { AnimatedBackground } from './components/AnimatedBackground';
 import { AIAssistant } from './components/AIAssistant';
 import { NotificationCenter } from './components/NotificationCenter';
-import ReportIncident from './components/ReportIncident';
-import Collaboration from './pages/Collaboration';
-import EnhancedDashboard from './pages/EnhancedDashboard';
-import EducationGamification from './pages/EducationGamification';
-import { initializeButtonFunctionality } from './components/ButtonFunctionality';
 import { AppNotification } from './types';
+
+// Lazy load heavy components for better code splitting
+const SmartContracts = lazy(() => import('./pages/SmartContracts').then(module => ({ default: module.SmartContracts })));
+const AdvancedAnalytics = lazy(() => import('./pages/AdvancedAnalytics'));
+const EmergencyCenter = lazy(() => import('./pages/EmergencyCenter').then(module => ({ default: module.EmergencyCenter })));
+const Donations = lazy(() => import('./pages/Donations').then(module => ({ default: module.Donations })));
+const Volunteers = lazy(() => import('./pages/Volunteers').then(module => ({ default: module.Volunteers })));
+const ReportIncident = lazy(() => import('./components/ReportIncident'));
+const Collaboration = lazy(() => import('./pages/Collaboration'));
+const EnhancedDashboard = lazy(() => import('./pages/EnhancedDashboard'));
+const EducationGamification = lazy(() => import('./pages/EducationGamification'));
+
+// Loading component for Suspense fallback
+const LoadingSpinner = () => (
+  <div className="flex items-center justify-center min-h-screen bg-slate-900">
+    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-400"></div>
+    <span className="ml-3 text-emerald-400">Loading...</span>
+  </div>
+);
+
+import { initializeButtonFunctionality } from './components/ButtonFunctionality';
 
 interface InstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -230,16 +241,52 @@ function App() {
             <Route path="/dashboard" element={<MainDashboard userLocation={userLocation} />} />
             <Route path="/home" element={<Home />} />
             <Route path="/main-dashboard" element={<Dashboard />} />
-            <Route path="/report-incident" element={<ReportIncident />} />
+            <Route path="/report-incident" element={
+              <Suspense fallback={<LoadingSpinner />}>
+                <ReportIncident />
+              </Suspense>
+            } />
             <Route path="/warnings" element={<Warnings />} />
-            <Route path="/contracts" element={<SmartContracts />} />
-            <Route path="/analytics" element={<AdvancedAnalytics />} />
-            <Route path="/emergency-communication" element={<EmergencyCenter />} />
-            <Route path="/donations" element={<Donations />} />
-            <Route path="/volunteers" element={<Volunteers />} />
-            <Route path="/collaboration" element={<Collaboration />} />
-            <Route path="/enhanced-dashboard" element={<EnhancedDashboard />} />
-            <Route path="/education" element={<EducationGamification />} />
+            <Route path="/contracts" element={
+              <Suspense fallback={<LoadingSpinner />}>
+                <SmartContracts />
+              </Suspense>
+            } />
+            <Route path="/analytics" element={
+              <Suspense fallback={<LoadingSpinner />}>
+                <AdvancedAnalytics />
+              </Suspense>
+            } />
+            <Route path="/emergency-communication" element={
+              <Suspense fallback={<LoadingSpinner />}>
+                <EmergencyCenter />
+              </Suspense>
+            } />
+            <Route path="/donations" element={
+              <Suspense fallback={<LoadingSpinner />}>
+                <Donations />
+              </Suspense>
+            } />
+            <Route path="/volunteers" element={
+              <Suspense fallback={<LoadingSpinner />}>
+                <Volunteers />
+              </Suspense>
+            } />
+            <Route path="/collaboration" element={
+              <Suspense fallback={<LoadingSpinner />}>
+                <Collaboration />
+              </Suspense>
+            } />
+            <Route path="/enhanced-dashboard" element={
+              <Suspense fallback={<LoadingSpinner />}>
+                <EnhancedDashboard />
+              </Suspense>
+            } />
+            <Route path="/education" element={
+              <Suspense fallback={<LoadingSpinner />}>
+                <EducationGamification />
+              </Suspense>
+            } />
           </Routes>
         </main>
         

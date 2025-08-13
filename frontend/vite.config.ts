@@ -8,7 +8,34 @@ export default defineConfig(() => ({
     exclude: ['lucide-react'],
   },
   build: {
-    chunkSizeWarningLimit: 1500 // Increase limit to 1.5MB to suppress warning
+    target: 'es2020',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // React ecosystem
+          'react-vendor': ['react', 'react-dom'],
+          
+          // UI and Animation libraries
+          'ui-vendor': ['framer-motion', 'lucide-react'],
+          
+          // Chart and visualization libraries
+          'charts-vendor': ['chart.js', 'react-chartjs-2'],
+          
+          // Map libraries (separate chunk for large mapping dependencies)
+          'maps-vendor': ['leaflet', 'react-leaflet'],
+          
+          // Utility libraries
+          'utils-vendor': ['axios'],
+        },
+        // Optimize chunk naming
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]'
+      }
+    },
+    // Split chunks automatically
+    chunkSizeWarningLimit: 800, // Reduce warning limit to encourage smaller chunks
+    minify: true, // Use default minification
   },
   server: {
     host: '0.0.0.0',

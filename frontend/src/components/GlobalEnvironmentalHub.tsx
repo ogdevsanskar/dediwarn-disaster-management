@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense, lazy } from 'react';
 import { motion } from 'framer-motion';
-import GlobalMap from './GlobalMap';
 import {
   fetchGlobalEnvironmentalData,
   FIRMSFire,
@@ -19,6 +18,19 @@ import {
   Wind,
   Zap
 } from 'lucide-react';
+
+// Lazy load the heavy GlobalMap component
+const GlobalMap = lazy(() => import('./GlobalMap'));
+
+// Loading component for the map
+const MapLoadingSpinner = () => (
+  <div className="flex items-center justify-center h-[600px] bg-slate-800/60 backdrop-blur-sm rounded-xl border border-slate-700/50">
+    <div className="text-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-400 mx-auto mb-4"></div>
+      <p className="text-slate-300">Loading Interactive Map...</p>
+    </div>
+  </div>
+);
 
 interface GlobalData {
   fires: FIRMSFire[];
@@ -235,17 +247,19 @@ const GlobalEnvironmentalHub: React.FC = () => {
                 Live OpenStreetMap Integration
               </div>
             </div>
-            <GlobalMap
-              fires={globalData.fires}
-              disasters={globalData.disasters}
-              events={globalData.events}
-              trackingEnabled={trackingEnabled}
-              onTrackingToggle={() => setTrackingEnabled(!trackingEnabled)}
-              onMarkerClick={(marker) => {
-                console.log('Marker clicked:', marker);
-                // You can add more interaction logic here
-              }}
-            />
+            <Suspense fallback={<MapLoadingSpinner />}>
+              <GlobalMap
+                fires={globalData.fires}
+                disasters={globalData.disasters}
+                events={globalData.events}
+                trackingEnabled={trackingEnabled}
+                onTrackingToggle={() => setTrackingEnabled(!trackingEnabled)}
+                onMarkerClick={(marker) => {
+                  console.log('Marker clicked:', marker);
+                  // You can add more interaction logic here
+                }}
+              />
+            </Suspense>
           </motion.div>
 
           {/* Main Content Grid */}
