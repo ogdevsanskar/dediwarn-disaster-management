@@ -121,3 +121,21 @@ Your disaster management platform with GlobalMap integration is now **completely
 **Live Demo:** Available at localhost:5174 (development) - Ready for production deployment!
 
 🎉 **Congratulations! Your comprehensive disaster management system is ready to help save lives!** 🎉
+ disaster-management-frontend@1.0.0 build
+> npm run typecheck && vite build
+> disaster-management-frontend@1.0.0 typecheck
+> tsc --noEmit
+vite v7.1.1 building for production...
+transforming...
+✓ 2820 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                     0.48 kB │ gzip:   0.31 kB
+dist/assets/index-AsszNIUZ.css    124.17 kB │ gzip:  24.20 kB
+dist/assets/index-Ceo2bzKF.js   1,572.77 kB │ gzip: 474.27 kB
+(!) Some chunks are larger than 1500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 8.75s
+==> Using Node.js version 20.11.0 via /opt/render/project/src/dediwarn-main/.nvmrc

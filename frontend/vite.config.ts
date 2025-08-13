@@ -11,21 +11,65 @@ export default defineConfig(() => ({
     target: 'es2020',
     rollupOptions: {
       output: {
-        manualChunks: {
-          // React ecosystem
-          'react-vendor': ['react', 'react-dom'],
+        manualChunks: (id) => {
+          // React core
+          if (id.includes('react') || id.includes('react-dom')) {
+            return 'react-vendor';
+          }
+          
+          // Router libraries
+          if (id.includes('react-router')) {
+            return 'router-vendor';
+          }
           
           // UI and Animation libraries
-          'ui-vendor': ['framer-motion', 'lucide-react'],
+          if (id.includes('framer-motion') || id.includes('lucide-react')) {
+            return 'ui-vendor';
+          }
           
-          // Chart and visualization libraries
-          'charts-vendor': ['chart.js', 'react-chartjs-2'],
+          // Map libraries
+          if (id.includes('leaflet')) {
+            return 'maps-vendor';
+          }
           
-          // Map libraries (separate chunk for large mapping dependencies)
-          'maps-vendor': ['leaflet', 'react-leaflet'],
+          // Chart libraries
+          if (id.includes('chart.js') || id.includes('react-chartjs-2') || id.includes('recharts')) {
+            return 'charts-vendor';
+          }
           
           // Utility libraries
-          'utils-vendor': ['axios'],
+          if (id.includes('axios') || id.includes('clsx') || id.includes('tailwind')) {
+            return 'utils-vendor';
+          }
+          
+          // Firebase and blockchain libraries
+          if (id.includes('firebase')) {
+            return 'firebase-vendor';
+          }
+          
+          if (id.includes('ethers')) {
+            return 'blockchain-vendor';
+          }
+          
+          // Socket.io and communication
+          if (id.includes('socket.io')) {
+            return 'communication-vendor';
+          }
+          
+          // Large utility libraries
+          if (id.includes('dompurify') || id.includes('@tanstack') || id.includes('styled-components')) {
+            return 'external-vendor';
+          }
+          
+          // Split remaining node_modules into smaller chunks
+          if (id.includes('node_modules')) {
+            const chunks = ['vendor-a', 'vendor-b', 'vendor-c'];
+            const hash = id.split('').reduce((a, b) => {
+              a = ((a << 5) - a) + b.charCodeAt(0);
+              return a & a;
+            }, 0);
+            return chunks[Math.abs(hash) % chunks.length];
+          }
         },
         // Optimize chunk naming
         chunkFileNames: 'assets/[name]-[hash].js',
@@ -34,7 +78,7 @@ export default defineConfig(() => ({
       }
     },
     // Split chunks automatically
-    chunkSizeWarningLimit: 800, // Reduce warning limit to encourage smaller chunks
+    chunkSizeWarningLimit: 500, // Set a very low limit to force more splitting
     minify: true, // Use default minification
   },
   server: {

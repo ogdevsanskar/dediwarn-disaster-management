@@ -5,13 +5,13 @@ import { Home } from './pages/Home';
 import LandingPage from './pages/LandingPage';
 import { Warnings } from './pages/Warnings';
 import { Dashboard } from './components/Dashboard';
-import { MainDashboard } from './components/MainDashboard';
 import { AnimatedBackground } from './components/AnimatedBackground';
 import { AIAssistant } from './components/AIAssistant';
 import { NotificationCenter } from './components/NotificationCenter';
 import { AppNotification } from './types';
 
 // Lazy load heavy components for better code splitting
+const MainDashboard = lazy(() => import('./components/MainDashboard').then(module => ({ default: module.MainDashboard })));
 const SmartContracts = lazy(() => import('./pages/SmartContracts').then(module => ({ default: module.SmartContracts })));
 const AdvancedAnalytics = lazy(() => import('./pages/AdvancedAnalytics'));
 const EmergencyCenter = lazy(() => import('./pages/EmergencyCenter').then(module => ({ default: module.EmergencyCenter })));
@@ -238,7 +238,11 @@ function App() {
         <main className={`relative z-10 ${!isOnline ? 'pt-12' : ''}`}>
           <Routes>
             <Route path="/" element={<LandingPage />} />
-            <Route path="/dashboard" element={<MainDashboard userLocation={userLocation} />} />
+            <Route path="/dashboard" element={
+              <Suspense fallback={<LoadingSpinner />}>
+                <MainDashboard userLocation={userLocation} />
+              </Suspense>
+            } />
             <Route path="/home" element={<Home />} />
             <Route path="/main-dashboard" element={<Dashboard />} />
             <Route path="/report-incident" element={
