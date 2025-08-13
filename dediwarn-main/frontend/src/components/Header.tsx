@@ -9,13 +9,13 @@ export const Header: React.FC = () => {
   const location = useLocation();
 
   const mainNavItems = [
-    { name: 'Home', path: '/', icon: '🏠' },
-    { name: 'Global Hub', path: '/enhanced-dashboard', icon: '🌍' },
-    { name: 'Collaboration', path: '/collaboration', icon: '🤝' },
-    { name: 'Analytics', path: '/analytics', icon: '📊' },
-    { name: 'Emergency', path: '/emergency-communication', icon: '🚨' },
-    { name: 'Education', path: '/education', icon: '🎓' },
-    { name: 'Donations', path: '/donations', icon: '💝' },
+    { name: 'Home', path: '/' },
+    { name: 'Global Hub', path: '/enhanced-dashboard' },
+    { name: 'Collaboration', path: '/collaboration' },
+    { name: 'Analytics', path: '/analytics' },
+    { name: 'Emergency', path: '/emergency-communication' },
+    { name: 'Education', path: '/education' },
+    { name: 'Donations', path: '/donations' },
   ];
 
   return (
@@ -23,14 +23,14 @@ export const Header: React.FC = () => {
       <div className={`${theme.spacing.containerMax} px-4 sm:px-6 lg:px-8`}>
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3 group flex-shrink-0">
+          <Link to="/" className="flex items-center space-x-3 group flex-shrink-0 -ml-2">
             <div className="relative">
               <div className={`w-10 h-10 ${theme.backgrounds.card} rounded-xl flex items-center justify-center ${theme.hover.scale} ${theme.borders.accent}`}>
                 <Shield className="h-6 w-6 text-blue-400 group-hover:text-blue-300 transition-colors" />
               </div>
               <div className="absolute inset-0 bg-blue-500 opacity-20 rounded-xl blur-lg group-hover:opacity-40 transition-opacity" />
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col -ml-1">
               <span className={`text-xl font-bold ${theme.text.gradient.primary} group-hover:scale-105 transition-transform duration-200`}>
                 ClimaAid
               </span>
@@ -45,14 +45,13 @@ export const Header: React.FC = () => {
                 <Link
                   key={item.name}
                   to={item.path}
-                  className={`relative px-4 py-2.5 text-sm rounded-xl transition-all duration-300 group whitespace-nowrap flex items-center font-medium space-x-2 ${
+                  className={`relative px-4 py-2.5 text-sm rounded-xl transition-all duration-300 group whitespace-nowrap flex items-center font-medium ${
                     location.pathname === item.path
                       ? `bg-gradient-to-r ${theme.gradients.primary} text-white shadow-lg ${theme.shadows.glow} scale-105`
                       : `${theme.text.secondary} hover:text-white hover:bg-slate-700/70 ${theme.hover.scale}`
                   }`}
                   style={{ animationDelay: `${index * 75}ms` }}
                 >
-                  <span className="text-lg">{item.icon}</span>
                   <span>{item.name}</span>
                   {location.pathname === item.path && (
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-xl blur-xl" />
@@ -117,7 +116,7 @@ export const Header: React.FC = () => {
               <Link
                 key={item.name}
                 to={item.path}
-                className={`flex items-center space-x-3 py-3 px-4 rounded-xl transition-all duration-200 ${
+                className={`flex items-center py-3 px-4 rounded-xl transition-all duration-200 ${
                   location.pathname === item.path
                     ? `bg-gradient-to-r ${theme.gradients.primary} text-white ${theme.shadows.glow}`
                     : `${theme.text.secondary} hover:text-white hover:bg-slate-700/70 active:scale-95`
@@ -125,7 +124,6 @@ export const Header: React.FC = () => {
                 onClick={() => setIsMenuOpen(false)}
                 style={{ animationDelay: `${index * 50}ms` }}
               >
-                <span className="text-xl">{item.icon}</span>
                 <span className="font-medium flex-1">{item.name}</span>
                 {location.pathname === item.path && (
                   <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
