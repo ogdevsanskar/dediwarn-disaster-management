@@ -4,7 +4,7 @@ import { Header } from './components/Header';
 import { Home } from './pages/Home';
 import { Warnings } from './pages/Warnings';
 import { SmartContracts } from './pages/SmartContracts';
-import AnalyticsHub from './pages/AnalyticsHub';
+import AdvancedAnalytics from './pages/AdvancedAnalytics';
 import { EmergencyCenter } from './pages/EmergencyCenter';
 import { Donations } from './pages/Donations';
 import { Volunteers } from './pages/Volunteers';
@@ -231,7 +231,7 @@ function App() {
             <Route path="/report-incident" element={<ReportIncident />} />
             <Route path="/warnings" element={<Warnings />} />
             <Route path="/contracts" element={<SmartContracts />} />
-            <Route path="/analytics" element={<AnalyticsHub />} />
+            <Route path="/analytics" element={<AdvancedAnalytics />} />
             <Route path="/emergency-communication" element={<EmergencyCenter />} />
             <Route path="/donations" element={<Donations />} />
             <Route path="/volunteers" element={<Volunteers />} />
