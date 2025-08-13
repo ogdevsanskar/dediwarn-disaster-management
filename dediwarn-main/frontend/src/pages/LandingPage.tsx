@@ -83,12 +83,12 @@ const LandingPage: React.FC = () => {
   }, [stats.length]);
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900 overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900 text-white overflow-hidden">
       {/* Animated Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-blue-100/30 to-purple-100/30 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-r from-green-100/30 to-blue-100/30 rounded-full blur-3xl animate-pulse animation-delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-purple-100/20 to-pink-100/20 rounded-full blur-3xl animate-pulse animation-delay-2000"></div>
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-blue-400/20 to-purple-600/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-r from-green-400/20 to-blue-500/20 rounded-full blur-3xl animate-pulse animation-delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-purple-400/10 to-pink-600/10 rounded-full blur-3xl animate-pulse animation-delay-2000"></div>
       </div>
 
       {/* Hero Section */}
@@ -124,12 +124,12 @@ const LandingPage: React.FC = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.5 }}
-            className="text-xl md:text-2xl text-gray-600 mb-8 max-w-4xl mx-auto"
+            className="text-xl md:text-2xl text-slate-300 mb-8 max-w-4xl mx-auto"
           >
             Climate Aid Platform - Protecting our planet through 
-            <span className="bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent font-semibold"> AI-powered environmental monitoring</span>, 
-            <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent font-semibold"> blockchain security</span>, and 
-            <span className="bg-gradient-to-r from-yellow-600 to-orange-600 bg-clip-text text-transparent font-semibold"> global collaboration</span>.
+            <span className="bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent font-semibold"> AI-powered environmental monitoring</span>, 
+            <span className="bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent font-semibold"> blockchain security</span>, and 
+            <span className="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent font-semibold"> global collaboration</span>.
           </motion.p>
 
           {/* CTA Buttons */}
@@ -165,16 +165,16 @@ const LandingPage: React.FC = () => {
             {stats.map((stat, index) => (
               <motion.div
                 key={index}
-                className={`p-6 rounded-xl bg-white/70 backdrop-blur-sm border border-gray-200 transition-all duration-500 shadow-lg ${
-                  index === currentStatIndex ? 'scale-110 border-blue-500 shadow-2xl' : 'scale-100'
+                className={`p-6 rounded-xl bg-slate-800/50 backdrop-blur-sm border border-slate-600 transition-all duration-500 ${
+                  index === currentStatIndex ? 'scale-110 border-blue-400 shadow-2xl' : 'scale-100'
                 }`}
                 whileHover={{ scale: 1.05 }}
               >
                 <div className="text-3xl mb-2">{stat.icon}</div>
-                <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                <div className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                   {stat.value}
                 </div>
-                <div className="text-gray-500 text-sm">{stat.label}</div>
+                <div className="text-slate-400 text-sm">{stat.label}</div>
               </motion.div>
             ))}
           </motion.div>
@@ -187,11 +187,11 @@ const LandingPage: React.FC = () => {
           transition={{ duration: 1, delay: 1.5 }}
           className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
         >
-          <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center">
+          <div className="w-6 h-10 border-2 border-slate-400 rounded-full flex justify-center">
             <motion.div
               animate={{ y: [0, 12, 0] }}
               transition={{ duration: 2, repeat: Infinity }}
-              className="w-1 h-3 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full mt-2"
+              className="w-1 h-3 bg-gradient-to-b from-blue-400 to-purple-400 rounded-full mt-2"
             />
           </div>
         </motion.div>
@@ -210,7 +210,7 @@ const LandingPage: React.FC = () => {
             <h2 className="text-5xl font-bold bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 bg-clip-text text-transparent mb-6">
               Revolutionary Features
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-slate-300 max-w-3xl mx-auto">
               Combining cutting-edge technology with environmental science to create the world's most comprehensive disaster prevention platform.
             </p>
           </motion.div>
@@ -224,15 +224,15 @@ const LandingPage: React.FC = () => {
                 transition={{ duration: 0.8, delay: index * 0.1 }}
                 viewport={{ once: true }}
                 whileHover={{ scale: 1.05, rotateY: 5 }}
-                className="group relative p-8 rounded-2xl bg-white/60 backdrop-blur-sm border border-gray-200 hover:border-transparent hover:shadow-2xl transition-all duration-300 overflow-hidden"
+                className="group relative p-8 rounded-2xl bg-slate-800/50 backdrop-blur-sm border border-slate-600 hover:border-transparent hover:shadow-2xl transition-all duration-300 overflow-hidden"
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
                 <div className="relative z-10">
                   <div className="text-5xl mb-4">{feature.icon}</div>
-                  <h3 className="text-xl font-bold mb-4 bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+                  <h3 className="text-xl font-bold mb-4 bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
                     {feature.title}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed">
+                  <p className="text-slate-400 leading-relaxed">
                     {feature.description}
                   </p>
                 </div>
@@ -255,7 +255,7 @@ const LandingPage: React.FC = () => {
             <h2 className="text-5xl font-bold bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent mb-6">
               Trusted Globally
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-slate-300">
               Hear from the experts who rely on ClimaAid every day
             </p>
           </motion.div>
@@ -269,15 +269,15 @@ const LandingPage: React.FC = () => {
                 transition={{ duration: 0.8, delay: index * 0.2 }}
                 viewport={{ once: true }}
                 whileHover={{ y: -10 }}
-                className="p-8 rounded-2xl bg-white/60 backdrop-blur-sm border border-gray-200 hover:border-blue-500 hover:shadow-2xl transition-all duration-300"
+                className="p-8 rounded-2xl bg-slate-800/70 backdrop-blur-sm border border-slate-600 hover:border-blue-400 hover:shadow-2xl transition-all duration-300"
               >
                 <div className="text-6xl mb-4 text-center">{testimonial.avatar}</div>
-                <p className="text-gray-600 mb-6 text-center italic">
+                <p className="text-slate-300 mb-6 text-center italic">
                   "{testimonial.quote}"
                 </p>
                 <div className="text-center">
-                  <div className="font-semibold text-gray-800">{testimonial.name}</div>
-                  <div className="text-gray-500 text-sm">{testimonial.role}</div>
+                  <div className="font-semibold text-white">{testimonial.name}</div>
+                  <div className="text-slate-400 text-sm">{testimonial.role}</div>
                 </div>
               </motion.div>
             ))}
@@ -294,11 +294,11 @@ const LandingPage: React.FC = () => {
           viewport={{ once: true }}
           className="max-w-4xl mx-auto text-center"
         >
-          <div className="p-12 rounded-3xl bg-white/50 backdrop-blur-sm border border-gray-200">
-            <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+          <div className="p-12 rounded-3xl bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-pink-600/20 backdrop-blur-sm border border-blue-400">
+            <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
               Ready to Protect Our Planet?
             </h2>
-            <p className="text-xl text-gray-600 mb-8">
+            <p className="text-xl text-slate-300 mb-8">
               Join millions of users worldwide in building a more resilient and sustainable future.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

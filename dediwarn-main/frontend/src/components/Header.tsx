@@ -64,15 +64,6 @@ export const Header: React.FC = () => {
 
           {/* Right Side Actions */}
           <div className="flex items-center space-x-4 flex-shrink-0">
-            {/* Emergency Button */}
-            <Link
-              to="/emergency-communication"
-              className={`hidden md:flex items-center space-x-2 px-4 py-2 bg-gradient-to-r ${theme.gradients.danger} rounded-xl font-semibold ${theme.hover.scale} ${theme.shadows.glowRed}`}
-            >
-              <span>🚨</span>
-              <span>Emergency</span>
-            </Link>
-
             {/* Wallet Connect */}
             <div className="hidden md:block">
               <WalletConnect />
@@ -96,16 +87,6 @@ export const Header: React.FC = () => {
       {isMenuOpen && (
         <div className={`lg:hidden ${theme.backgrounds.glass} border-t ${theme.borders.default} animate-slide-down ${theme.shadows['2xl']}`}>
           <div className="px-4 py-6 space-y-4 max-h-96 overflow-y-auto">
-            {/* Emergency Button Mobile */}
-            <Link
-              to="/emergency-communication"
-              className={`flex items-center justify-center space-x-2 py-3 px-4 bg-gradient-to-r ${theme.gradients.danger} rounded-xl font-semibold ${theme.hover.scale} mb-4`}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <span>🚨</span>
-              <span>Emergency Alert</span>
-            </Link>
-
             {/* Wallet Connect in mobile menu */}
             <div className="pb-4 border-b border-slate-700/50">
               <WalletConnect />
