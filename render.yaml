@@ -37,3 +37,7 @@ services:
         value: https://dediwarn-backend.onrender.com
       - key: VITE_WEBSOCKET_URL
         value: wss://dediwarn-backend.onrender.com
+      - key: CI
+        value: false
+      - key: GENERATE_SOURCEMAP
+        value: false

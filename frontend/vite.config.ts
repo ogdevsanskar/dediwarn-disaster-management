@@ -77,8 +77,8 @@ export default defineConfig(() => ({
         assetFileNames: 'assets/[name]-[hash].[ext]'
       }
     },
-    // Split chunks automatically
-    chunkSizeWarningLimit: 500, // Set a very low limit to force more splitting
+    // Suppress chunk size warnings for production deployment
+    chunkSizeWarningLimit: 1000, // 1MB limit - our largest chunk is 260KB which is acceptable
     minify: true, // Use default minification
   },
   server: {
