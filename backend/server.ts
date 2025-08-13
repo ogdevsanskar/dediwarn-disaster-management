@@ -20,8 +20,11 @@ const io = new SocketIOServer(server, {
       'http://localhost:4173',
       'https://dediwarn-frontend.onrender.com',
       'https://disaster-management-frontend.onrender.com',
+      'https://dediwarn-disaster-management.netlify.app',
+      'https://main--dediwarn-disaster-management.netlify.app',
       process.env.FRONTEND_URL,
-      process.env.CORS_ORIGIN
+      process.env.CORS_ORIGIN,
+      process.env.NETLIFY_URL
     ].filter((origin): origin is string => typeof origin === 'string'),
     methods: ['GET', 'POST', 'PUT', 'DELETE']
   }
@@ -57,8 +60,11 @@ app.use(cors({
     'http://localhost:4173',
     'https://dediwarn-frontend.onrender.com',
     'https://disaster-management-frontend.onrender.com',
+    'https://dediwarn-disaster-management.netlify.app',
+    'https://main--dediwarn-disaster-management.netlify.app',
     process.env.FRONTEND_URL,
-    process.env.CORS_ORIGIN
+    process.env.CORS_ORIGIN,
+    process.env.NETLIFY_URL
   ].filter((origin): origin is string => typeof origin === 'string'),
   credentials: true
 }));
