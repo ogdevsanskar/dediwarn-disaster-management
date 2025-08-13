@@ -411,6 +411,8 @@ export const Analytics: React.FC = () => {
                   showNotification('Chart data refreshed', 'success');
                 }}
                 className="p-1 text-slate-400 hover:text-white transition-colors"
+                title="Refresh Chart Data"
+                aria-label="Refresh Chart Data"
               >
                 <RefreshCw className="h-4 w-4" />
               </button>
@@ -720,12 +722,16 @@ export const Analytics: React.FC = () => {
             <button
               onClick={() => showNotification('Bandwidth data exported', 'success')}
               className="p-2 text-slate-400 hover:text-white transition-colors"
+              title="Export Bandwidth Data"
+              aria-label="Export Bandwidth Data"
             >
               <Download className="h-4 w-4" />
             </button>
             <button
               onClick={() => showNotification('Bandwidth report shared', 'info')}
               className="p-2 text-slate-400 hover:text-white transition-colors"
+              title="Share Bandwidth Report"
+              aria-label="Share Bandwidth Report"
             >
               <Share2 className="h-4 w-4" />
             </button>
