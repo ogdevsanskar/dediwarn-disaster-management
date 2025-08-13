@@ -87,15 +87,17 @@ export default defineConfig(() => ({
     strictPort: false,
     proxy: {
       '/api': {
-        target: 'https://disaster-management-backend-qtxs.onrender.com',
+        target: process.env.VITE_API_URL || 'http://localhost:3001',
         changeOrigin: true,
-        secure: false,
+        secure: true,
       },
       '/ws': {
-        target: 'ws://localhost:5000',
+        target: process.env.VITE_WEBSOCKET_URL || 'ws://localhost:3001',
         ws: true,
         changeOrigin: true,
       }
     }
   },
+  // Ensure proper base path for static deployment
+  base: '/',
 }));
