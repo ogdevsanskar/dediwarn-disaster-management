@@ -18,8 +18,10 @@ const io = new SocketIOServer(server, {
       'http://localhost:5174',
       'http://localhost:3000', 
       'http://localhost:4173',
+      'https://dediwarn-frontend.onrender.com',
       'https://disaster-management-frontend.onrender.com',
-      process.env.FRONTEND_URL
+      process.env.FRONTEND_URL,
+      process.env.CORS_ORIGIN
     ].filter((origin): origin is string => typeof origin === 'string'),
     methods: ['GET', 'POST', 'PUT', 'DELETE']
   }
@@ -53,8 +55,10 @@ app.use(cors({
     'http://localhost:5174',
     'http://localhost:3000', 
     'http://localhost:4173',
+    'https://dediwarn-frontend.onrender.com',
     'https://disaster-management-frontend.onrender.com',
-    process.env.FRONTEND_URL
+    process.env.FRONTEND_URL,
+    process.env.CORS_ORIGIN
   ].filter((origin): origin is string => typeof origin === 'string'),
   credentials: true
 }));
