@@ -1,0 +1,197 @@
+/* Network.module.css */
+
+/* Base animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes expand {
+  from {
+    width: 0%;
+  }
+  to {
+    width: var(--final-width);
+  }
+}
+
+/* Animation delay classes */
+.animateDelay0 {
+  animation-delay: 0s;
+}
+
+.animateDelay1 {
+  animation-delay: 0.1s;
+}
+
+.animateDelay2 {
+  animation-delay: 0.2s;
+}
+
+.animateDelay3 {
+  animation-delay: 0.3s;
+}
+
+.animateDelay4 {
+  animation-delay: 0.4s;
+}
+
+.animateDelay5 {
+  animation-delay: 0.5s;
+}
+
+.animateDelay6 {
+  animation-delay: 0.6s;
+}
+
+.animateDelay7 {
+  animation-delay: 0.7s;
+}
+
+.animateDelay8 {
+  animation-delay: 0.8s;
+}
+
+.animateDelay9 {
+  animation-delay: 0.9s;
+}
+
+.animateDelay10 {
+  animation-delay: 1.0s;
+}
+
+.animateDelay11 {
+  animation-delay: 1.1s;
+}
+
+.animateDelay12 {
+  animation-delay: 1.2s;
+}
+
+.animateDelay13 {
+  animation-delay: 1.3s;
+}
+
+.animateDelay14 {
+  animation-delay: 1.4s;
+}
+
+.animateDelay15 {
+  animation-delay: 1.5s;
+}
+
+/* Network stat delays */
+.networkStatDelay0 {
+  animation-delay: 0s;
+}
+
+.networkStatDelay1 {
+  animation-delay: 0.1s;
+}
+
+.networkStatDelay2 {
+  animation-delay: 0.2s;
+}
+
+.networkStatDelay3 {
+  animation-delay: 0.3s;
+}
+
+/* Node positioning */
+.nodeMarker {
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  animation: pulse 2s infinite;
+  left: var(--node-left, 0%);
+  top: var(--node-top, 0%);
+}
+
+.nodeMarker:hover {
+  transform: scale(1.5);
+}
+
+.nodeOnline {
+  background-color: #10b981;
+}
+
+.nodeMaintenance {
+  background-color: #f59e0b;
+}
+
+.nodeOffline {
+  background-color: #ef4444;
+}
+
+/* Progress bars */
+.progressBar {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6);
+  height: 0.5rem;
+  border-radius: 9999px;
+  transition: all 1s ease;
+  animation: expand 1s ease-out forwards;
+  width: var(--progress-width, 0%);
+}
+
+/* Table row selected state */
+.selectedRow {
+  background-color: rgba(37, 99, 235, 0.1) !important;
+  border-left: 4px solid #3b82f6;
+}
+
+/* Animation classes */
+.fadeInUp {
+  animation: fadeInUp 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.slideInLeft {
+  animation: slideInLeft 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+/* SVG line animations */
+.connectionLine {
+  stroke: rgba(59, 130, 246, 0.3);
+  stroke-width: 1;
+  animation: pulse 3s infinite;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .nodeMarker {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+}
+
+/* Performance optimizations */
+.networkContainer {
+  contain: layout;
+  will-change: transform;
+}
+
+.mapContainer {
+  contain: strict;
+  will-change: auto;
+}

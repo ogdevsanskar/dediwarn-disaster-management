@@ -1,0 +1,23 @@
+{
+  "files": [],
+  "compilerOptions": {
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node"
+  },
+  "references": [
+    { "path": "./frontend" },
+    { "path": "./backend" }
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "frontend",
+    "backend",
+    "**/*.js"
+  ]
+}
