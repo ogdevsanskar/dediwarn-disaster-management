@@ -21,6 +21,7 @@ const ReportIncident = lazy(() => import('./components/ReportIncident'));
 const Collaboration = lazy(() => import('./pages/Collaboration'));
 const EnhancedDashboard = lazy(() => import('./pages/EnhancedDashboard'));
 const EducationGamification = lazy(() => import('./pages/EducationGamification'));
+const NavigationDemo = lazy(() => import('./components/NavigationDemo'));
 
 // Loading component for Suspense fallback
 const LoadingSpinner = () => (
@@ -289,6 +290,11 @@ function App() {
             <Route path="/education" element={
               <Suspense fallback={<LoadingSpinner />}>
                 <EducationGamification />
+              </Suspense>
+            } />
+            <Route path="/navigation-demo" element={
+              <Suspense fallback={<LoadingSpinner />}>
+                <NavigationDemo />
               </Suspense>
             } />
           </Routes>
