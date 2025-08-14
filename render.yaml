@@ -26,10 +26,31 @@ services:
   # Frontend Service (Static Site)
   - type: static
     name: dediwarn-frontend
-    buildCommand: node generate-version.js && cd frontend && npm ci --silent && npm run build:render
+    buildCommand: rm -rf node_modules/.cache && rm -rf frontend/node_modules/.cache && rm -rf frontend/dist && node generate-version.js && cd frontend && npm ci --silent --force && npm run build:render
     staticPublishPath: frontend/dist
     pullRequestPreviewsEnabled: false
     headers:
+      # AGGRESSIVE CACHE BUSTING FOR RENDER CDN
+      # Apply no-cache to ALL requests to force fresh content
+      - path: /*
+        name: Cache-Control
+        value: no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0
+      - path: /*
+        name: Pragma
+        value: no-cache
+      - path: /*
+        name: Expires
+        value: "0"
+      - path: /*
+        name: ETag
+        value: "off"
+      - path: /*
+        name: Last-Modified
+        value: "Thu, 01 Jan 1970 00:00:00 GMT"
+      - path: /*
+        name: X-Cache-Control
+        value: no-store
+      
       # Security Headers
       - path: /*
         name: X-Frame-Options
@@ -44,19 +65,13 @@ services:
         name: Referrer-Policy
         value: strict-origin-when-cross-origin
       
-      # Cache Control Headers for Fresh Content
-      - path: /index.html
-        name: Cache-Control
-        value: no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0
-      - path: /index.html
-        name: Pragma
-        value: no-cache
-      - path: /index.html
-        name: Expires
+      # Force CDN bypass headers
+      - path: /*
+        name: X-Accel-Expires
         value: "0"
-      - path: /index.html
-        name: ETag
-        value: "off"
+      - path: /*
+        name: Surrogate-Control
+        value: no-store
       
       # Cache Control for Service Worker
       - path: /sw.js
@@ -73,11 +88,6 @@ services:
       - path: /offline.html
         name: Cache-Control
         value: no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0
-      
-      # Aggressive caching for static assets with cache busting via filename hashing
-      - path: /assets/*
-        name: Cache-Control
-        value: public, max-age=31536000, immutable
       
       # Short cache for API data and JSON files
       - path: "*.json"
@@ -111,6 +121,12 @@ services:
       - key: SKIP_PREFLIGHT_CHECK
         value: true
       - key: BUILD_IGNORE_WARNINGS
+        value: true
+      - key: VITE_CACHE_BUSTER
+        value: force-no-cache
+      - key: VITE_BUILD_TIMESTAMP
+        generateValue: true
+      - key: VITE_FORCE_FRESH_CONTENT
         value: true
       - key: VITE_OPENWEATHER_API_KEY
         value: demo_key

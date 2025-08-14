@@ -8,7 +8,7 @@ const DYNAMIC_CACHE = 'disaster-dynamic-v1';
 const CRITICAL_CACHE = 'disaster-critical-v1';
 
 // Current app version - updated during build
-let APP_VERSION = '1.0.0-1755202260333';
+let APP_VERSION = '1.0.0-1755204008526';
 
 // Resources that should always be fresh
 const NEVER_CACHE = [

@@ -1,9 +1,17 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
+// Generate cache-busting timestamp
+const timestamp = Date.now();
+
 // https://vitejs.dev/config/
 export default defineConfig(() => ({
   plugins: [react()],
+  // Add cache busting environment variables
+  define: {
+    __BUILD_TIMESTAMP__: JSON.stringify(timestamp),
+    __CACHE_BUSTER__: JSON.stringify(`cb-${timestamp}`),
+  },
   optimizeDeps: {
     exclude: ['lucide-react'],
   },

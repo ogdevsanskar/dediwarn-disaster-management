@@ -1,8 +1,10 @@
 {
-  "version": "1.0.0",
-  "buildId": "1755202260333",
-  "buildTime": "2025-08-14T20:11:00.331Z",
+  "version": "1.0.0-1755204008526-oa7dcyvp9z",
+  "buildId": "1755204008526",
+  "buildTime": "2025-08-14T20:40:08.525Z",
   "commitHash": "unknown",
+  "renderDeployId": "local",
+  "cacheBuster": "cb-1755204008526-6478oh",
   "features": [
     "Enhanced Navigation System",
     "OpenStreetMap Integration",
@@ -12,7 +14,8 @@
     "GPS Tracking",
     "CDN Cache Busting",
     "Progressive Web App",
-    "Offline Support"
+    "Offline Support",
+    "Render CDN Bypass"
   ],
   "apis": {
     "osrm": "https://router.project-osrm.org",
@@ -21,14 +24,19 @@
   },
   "deployment": {
     "platform": "Render",
-    "cachingStrategy": "aggressive-busting",
-    "lastDeployment": "2025-08-14T20:11:00.331Z",
-    "environment": "production"
+    "cachingStrategy": "aggressive-no-cache",
+    "lastDeployment": "2025-08-14T20:40:08.525Z",
+    "environment": "production",
+    "region": "oregon",
+    "forceNoCacheHeaders": true
   },
   "cacheBusting": {
     "enabled": true,
-    "strategy": "timestamp-versioning",
+    "strategy": "render-cdn-bypass",
     "maxAge": 0,
-    "mustRevalidate": true
+    "mustRevalidate": true,
+    "noStore": true,
+    "cdnBypass": true,
+    "timestampVersion": "1755204008526"
   }
 }

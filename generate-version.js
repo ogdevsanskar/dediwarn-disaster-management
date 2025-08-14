@@ -24,13 +24,17 @@ try {
 // Generate build info
 const buildTime = new Date().toISOString();
 const buildId = Date.now().toString();
-const commitHash = process.env.COMMIT_SHA || 'unknown';
+const randomSuffix = Math.random().toString(36).substring(2, 15);
+const commitHash = process.env.COMMIT_SHA || process.env.RENDER_GIT_COMMIT || 'unknown';
+const renderDeployId = process.env.RENDER_SERVICE_ID || 'local';
 
 const versionInfo = {
-  version: packageVersion,
+  version: `${packageVersion}-${buildId}-${randomSuffix}`,
   buildId: buildId,
   buildTime: buildTime,
   commitHash: commitHash,
+  renderDeployId: renderDeployId,
+  cacheBuster: `cb-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
   features: [
     "Enhanced Navigation System",
     "OpenStreetMap Integration", 
@@ -40,7 +44,8 @@ const versionInfo = {
     "GPS Tracking",
     "CDN Cache Busting",
     "Progressive Web App",
-    "Offline Support"
+    "Offline Support",
+    "Render CDN Bypass"
   ],
   apis: {
     osrm: "https://router.project-osrm.org",
@@ -49,15 +54,20 @@ const versionInfo = {
   },
   deployment: {
     platform: "Render",
-    cachingStrategy: "aggressive-busting",
+    cachingStrategy: "aggressive-no-cache",
     lastDeployment: buildTime,
-    environment: process.env.NODE_ENV || "production"
+    environment: process.env.NODE_ENV || "production",
+    region: process.env.RENDER_REGION || "oregon",
+    forceNoCacheHeaders: true
   },
   cacheBusting: {
     enabled: true,
-    strategy: "timestamp-versioning",
+    strategy: "render-cdn-bypass",
     maxAge: 0,
-    mustRevalidate: true
+    mustRevalidate: true,
+    noStore: true,
+    cdnBypass: true,
+    timestampVersion: buildId
   }
 };
 
