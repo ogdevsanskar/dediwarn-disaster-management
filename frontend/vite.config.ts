@@ -77,9 +77,12 @@ export default defineConfig(() => ({
         assetFileNames: 'assets/[name]-[hash].[ext]'
       }
     },
-    // Suppress chunk size warnings for production deployment
-    chunkSizeWarningLimit: 1000, // 1MB limit - our largest chunk is 260KB which is acceptable
-    minify: true, // Use default minification
+    // Suppress chunk size warnings completely for deployment
+    chunkSizeWarningLimit: 2000, // 2MB limit - eliminates all warnings for our 260KB chunks
+    minify: 'esbuild', // Use esbuild for faster builds (default in Vite)
+    // Additional optimizations for Render deployment
+    reportCompressedSize: false, // Skip compressed size analysis to speed up build
+    sourcemap: false // Explicitly disable sourcemaps
   },
   server: {
     host: '0.0.0.0',

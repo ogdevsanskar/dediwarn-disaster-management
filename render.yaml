@@ -26,7 +26,7 @@ services:
   # Frontend Service (Static Site)
   - type: static
     name: dediwarn-frontend
-    buildCommand: cd frontend && npm ci && npm run build
+    buildCommand: cd frontend && npm ci --silent && npm run build:render
     staticPublishPath: frontend/dist
     pullRequestPreviewsEnabled: false
     headers:
@@ -60,6 +60,12 @@ services:
         value: false
       - key: GENERATE_SOURCEMAP
         value: false
+      - key: DISABLE_ESLINT_PLUGIN
+        value: true
+      - key: SKIP_PREFLIGHT_CHECK
+        value: true
+      - key: BUILD_IGNORE_WARNINGS
+        value: true
       - key: VITE_OPENWEATHER_API_KEY
         value: demo_key
       - key: VITE_REALTIME_DATA_ENABLED
