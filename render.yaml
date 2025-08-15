@@ -26,6 +26,8 @@ services:
   # Frontend Service (Static Site)
   - type: web
     name: dediwarn-frontend
+    plan: free
+    region: oregon
     buildCommand: rm -rf node_modules/.cache && rm -rf frontend/node_modules/.cache && rm -rf frontend/dist && node generate-version.js && cd frontend && npm ci --silent --force && npm run build:render
     staticPublishPath: frontend/dist
     pullRequestPreviewsEnabled: false
