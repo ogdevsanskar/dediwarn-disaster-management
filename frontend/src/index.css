@@ -3,6 +3,9 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+/* Import Leaflet CSS for maps */
+@import 'leaflet/dist/leaflet.css';
+
 /* CSS Custom Properties for dynamic theming */
 :root {
   --gradient-primary: linear-gradient(to right, rgb(59 130 246), rgb(147 51 234), rgb(236 72 153));

@@ -1,22 +1,35 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import './index.css';
-import { initializeApp } from './utils/appInitializer';
-import { applySecurityHeaders } from './security/securityMiddleware';
-import { cacheBustingService } from './services/CacheBustingService';
 
-// Initialize security headers and CSP
-applySecurityHeaders();
+// Create root and render App immediately
+const rootElement = document.getElementById('root');
 
-// Initialize cache busting service for fresh content delivery
-cacheBustingService.setCacheBustingEnabled(true);
+if (!rootElement) {
+  throw new Error('Root element not found');
+}
 
-// Initialize the application with all button functionality
-initializeApp();
-
-createRoot(document.getElementById('root')!).render(
+createRoot(rootElement).render(
   <StrictMode>
-    <App />
+    <ErrorBoundary>
+      <App />
+    </ErrorBoundary>
   </StrictMode>
 );
+
+// Initialize app functionality after React renders
+import('./utils/appInitializer').then(({ initializeApp }) => {
+  initializeApp();
+}).catch(console.error);
+
+// Initialize security headers after React renders
+import('./security/securityMiddleware').then(({ applySecurityHeaders }) => {
+  applySecurityHeaders();
+}).catch(console.error);
+
+// Initialize cache busting service after React renders
+import('./services/CacheBustingService').then(({ cacheBustingService }) => {
+  cacheBustingService.setCacheBustingEnabled(true);
+}).catch(console.error);

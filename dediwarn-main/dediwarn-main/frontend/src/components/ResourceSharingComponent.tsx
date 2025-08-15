@@ -275,7 +275,11 @@ const ResourceSharingComponent: React.FC<ResourceSharingProps> = ({
               >
                 Request to Borrow
               </button>
-              <button className="p-2 text-gray-400 hover:text-gray-600">
+              <button 
+                title="View resource details"
+                aria-label="View resource details"
+                className="p-2 text-gray-400 hover:text-gray-600"
+              >
                 <ArrowRight className="h-5 w-5" />
               </button>
             </div>

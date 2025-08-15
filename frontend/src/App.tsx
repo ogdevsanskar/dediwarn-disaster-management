@@ -1,27 +1,28 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useState, useEffect, Suspense, lazy } from 'react';
 import { Header } from './components/Header';
-import { Home } from './pages/Home';
-import LandingPage from './pages/LandingPage';
-import { Warnings } from './pages/Warnings';
-import { Dashboard } from './components/Dashboard';
 import { AnimatedBackground } from './components/AnimatedBackground';
 import { AIAssistant } from './components/AIAssistant';
 import { NotificationCenter } from './components/NotificationCenter';
 import { AppNotification } from './types';
 
-// Lazy load heavy components for better code splitting
-const MainDashboard = lazy(() => import('./components/MainDashboard').then(module => ({ default: module.MainDashboard })));
-const SmartContracts = lazy(() => import('./pages/SmartContracts').then(module => ({ default: module.SmartContracts })));
+// Import components that use named exports
+import { Home } from './pages/Home';
+import { Dashboard } from './pages/Dashboard';
+import { Warnings } from './pages/Warnings';
+import { SmartContracts } from './pages/SmartContracts';
+import { EmergencyCenter } from './pages/EmergencyCenter';
+import { Donations } from './pages/Donations';
+import { Volunteers } from './pages/Volunteers';
+
+// Lazy load components that use default exports
+const LandingPage = lazy(() => import('./pages/LandingPage'));
 const AdvancedAnalytics = lazy(() => import('./pages/AdvancedAnalytics'));
-const EmergencyCenter = lazy(() => import('./pages/EmergencyCenter').then(module => ({ default: module.EmergencyCenter })));
-const Donations = lazy(() => import('./pages/Donations').then(module => ({ default: module.Donations })));
-const Volunteers = lazy(() => import('./pages/Volunteers').then(module => ({ default: module.Volunteers })));
-const ReportIncident = lazy(() => import('./components/ReportIncident'));
 const Collaboration = lazy(() => import('./pages/Collaboration'));
 const EnhancedDashboard = lazy(() => import('./pages/EnhancedDashboard'));
 const EducationGamification = lazy(() => import('./pages/EducationGamification'));
-const NavigationDemo = lazy(() => import('./components/NavigationDemo'));
+const LiveMap = lazy(() => import('./pages/LiveMap'));
+const GlobalHubPage = lazy(() => import('./pages/GlobalHubPage'));
 
 // Loading component for Suspense fallback
 const LoadingSpinner = () => (
@@ -30,8 +31,6 @@ const LoadingSpinner = () => (
     <span className="ml-3 text-emerald-400">Loading...</span>
   </div>
 );
-
-import { initializeButtonFunctionality } from './components/ButtonFunctionality';
 
 interface InstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -42,111 +41,131 @@ interface InstallPromptEvent extends Event {
 }
 
 function App() {
-  const [userLocation, setUserLocation] = useState({ lat: 0, lng: 0 });
+  const [userLocation, setUserLocation] = useState({ lat: 0, lng: 0 }); // Used for geolocation in components
   const [userRole, setUserRole] = useState<'authority' | 'volunteer' | 'citizen'>('citizen');
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
   const [showRoleSelector, setShowRoleSelector] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    // Initialize button functionality
-    initializeButtonFunctionality();
-    
-    // Initialize PWA features
-    initializePWA();
-    
-    // Get user location
-    getCurrentLocation();
-    
-    // Set up online/offline detection
-    window.addEventListener('online', () => setIsOnline(true));
-    window.addEventListener('offline', () => setIsOnline(false));
-    
-    // Request notification permission
-    requestNotificationPermission();
-    
-    return () => {
-      window.removeEventListener('online', () => setIsOnline(true));
-      window.removeEventListener('offline', () => setIsOnline(false));
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const initializePWA = () => {
-    // Register service worker
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js')
-        .then((registration) => {
-          console.log('SW registered: ', registration);
-          
-          // Check for updates
-          registration.addEventListener('updatefound', () => {
-            const newWorker = registration.installing;
-            if (newWorker) {
-              newWorker.addEventListener('statechange', () => {
-                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                  // New content available
-                  showUpdateNotification();
-                }
-              });
-            }
-          });
-        })
-        .catch((registrationError) => {
-          console.log('SW registration failed: ', registrationError);
-        });
-    }
-
-    // Handle app install prompt
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      showInstallPrompt(e as InstallPromptEvent);
-    });
-  };
-
-  const getCurrentLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setUserLocation({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          });
-        },
-        (error) => {
-          console.error('Location error:', error);
-          // Default to a safe location if needed
-          setUserLocation({ lat: 28.6139, lng: 77.2090 }); // Delhi
-        },
-        { enableHighAccuracy: true, timeout: 10000, maximumAge: 600000 }
-      );
-    }
-  };
-
-  const requestNotificationPermission = async () => {
-    if ('Notification' in window && 'serviceWorker' in navigator) {
-      const permission = await Notification.requestPermission();
-      if (permission === 'granted') {
-        // Subscribe to push notifications
-        const registration = await navigator.serviceWorker.ready;
-        const subscription = await registration.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey: import.meta.env.VITE_VAPID_PUBLIC_KEY
+    // Initialize app with error handling
+    const initializeApp = async () => {
+      try {
+        // Initialize button functionality
+        await import('./components/ButtonFunctionality').then(({ initializeButtonFunctionality }) => {
+          initializeButtonFunctionality();
         });
         
-        // Send subscription to server
-        await fetch('/api/subscribe-notifications', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            subscription,
-            location: userLocation,
-            role: userRole
-          })
-        });
+        // Initialize PWA features
+        const initializePWA = () => {
+          // Register service worker
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+              .then((registration) => {
+                console.log('SW registered: ', registration);
+                
+                // Check for updates
+                registration.addEventListener('updatefound', () => {
+                  const newWorker = registration.installing;
+                  if (newWorker) {
+                    newWorker.addEventListener('statechange', () => {
+                      if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                        // New content available
+                        showUpdateNotification();
+                      }
+                    });
+                  }
+                });
+              })
+              .catch((registrationError) => {
+                console.log('SW registration failed: ', registrationError);
+              });
+          }
+
+          // Handle app install prompt
+          window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            showInstallPrompt(e as InstallPromptEvent);
+          });
+        };
+
+        // Get current location
+        const getCurrentLocation = () => {
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                setUserLocation({
+                  lat: position.coords.latitude,
+                  lng: position.coords.longitude
+                });
+              },
+              (error) => {
+                console.error('Location error:', error);
+                // Default to a safe location if needed
+                setUserLocation({ lat: 28.6139, lng: 77.2090 }); // Delhi
+              },
+              { enableHighAccuracy: true, timeout: 10000, maximumAge: 600000 }
+            );
+          }
+        };
+
+        // Request notification permission
+        const requestNotificationPermission = async () => {
+          if ('Notification' in window && 'serviceWorker' in navigator) {
+            const permission = await Notification.requestPermission();
+            if (permission === 'granted') {
+              // Subscribe to push notifications
+              const registration = await navigator.serviceWorker.ready;
+              const subscription = await registration.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: import.meta.env.VITE_VAPID_PUBLIC_KEY
+              });
+              
+              // Send subscription to server (we'll get the current location and role when needed)
+              await fetch('/api/subscribe-notifications', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  subscription,
+                  // We'll send location and role in a separate call after they're set
+                })
+              });
+            }
+          }
+        };
+        
+        // Initialize PWA features, location, and notifications
+        initializePWA();
+        getCurrentLocation();
+        await requestNotificationPermission();
+        
+        // Set up online/offline detection
+        const handleOnline = () => setIsOnline(true);
+        const handleOffline = () => setIsOnline(false);
+        
+        window.addEventListener('online', handleOnline);
+        window.addEventListener('offline', handleOffline);
+        
+        setIsInitialized(true);
+        
+        return () => {
+          window.removeEventListener('online', handleOnline);
+          window.removeEventListener('offline', handleOffline);
+        };
+      } catch (error) {
+        console.error('App initialization error:', error);
+        setIsInitialized(true); // Still show the app even if initialization fails
       }
-    }
-  };
+    };
+
+    initializeApp();
+  }, []);
+
+  // Show loading spinner while initializing
+  if (!isInitialized) {
+    return <LoadingSpinner />;
+  }
 
   const showUpdateNotification = () => {
     const notification = {
@@ -239,39 +258,18 @@ function App() {
         <main className={`relative z-10 ${!isOnline ? 'pt-12' : ''}`}>
           <Routes>
             <Route path="/" element={<LandingPage />} />
-            <Route path="/dashboard" element={
-              <Suspense fallback={<LoadingSpinner />}>
-                <MainDashboard userLocation={userLocation} />
-              </Suspense>
-            } />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/home" element={<Home />} />
             <Route path="/main-dashboard" element={<Dashboard />} />
-            <Route path="/report-incident" element={
-              <Suspense fallback={<LoadingSpinner />}>
-                <ReportIncident />
-              </Suspense>
-            } />
             <Route path="/warnings" element={<Warnings />} />
-            <Route path="/contracts" element={
-              <Suspense fallback={<LoadingSpinner />}>
-                <SmartContracts />
-              </Suspense>
-            } />
+            <Route path="/contracts" element={<SmartContracts />} />
             <Route path="/analytics" element={
               <Suspense fallback={<LoadingSpinner />}>
                 <AdvancedAnalytics />
               </Suspense>
             } />
-            <Route path="/emergency-communication" element={
-              <Suspense fallback={<LoadingSpinner />}>
-                <EmergencyCenter />
-              </Suspense>
-            } />
-            <Route path="/donations" element={
-              <Suspense fallback={<LoadingSpinner />}>
-                <Donations />
-              </Suspense>
-            } />
+            <Route path="/emergency-communication" element={<EmergencyCenter />} />
+            <Route path="/donations" element={<Donations />} />
             <Route path="/volunteers" element={
               <Suspense fallback={<LoadingSpinner />}>
                 <Volunteers />
@@ -292,9 +290,14 @@ function App() {
                 <EducationGamification />
               </Suspense>
             } />
-            <Route path="/navigation-demo" element={
+            <Route path="/live-map" element={
               <Suspense fallback={<LoadingSpinner />}>
-                <NavigationDemo />
+                <LiveMap userLocation={userLocation} />
+              </Suspense>
+            } />
+            <Route path="/global-hub" element={
+              <Suspense fallback={<LoadingSpinner />}>
+                <GlobalHubPage />
               </Suspense>
             } />
           </Routes>

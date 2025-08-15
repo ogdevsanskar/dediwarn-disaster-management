@@ -62,11 +62,15 @@ const GlobalEnvironmentalHub: React.FC = () => {
   ];
 
   const loadGlobalData = React.useCallback(async () => {
+    console.log('Loading global environmental data...');
     setLoading(true);
     try {
       const data = await fetchGlobalEnvironmentalData(selectedRegion.lat, selectedRegion.lon);
+      console.log('Global data loaded:', data);
       if (data) {
         setGlobalData(data);
+      } else {
+        console.warn('No data received from fetchGlobalEnvironmentalData');
       }
     } catch (error) {
       console.error('Error loading global data:', error);

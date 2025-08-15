@@ -200,6 +200,8 @@ export const UserReportSystem: React.FC<UserReportSystemProps> = ({
                 Report Disaster/Emergency
               </h2>
               <button
+                title="Close report form"
+                aria-label="Close disaster report form"
                 onClick={() => setIsOpen(false)}
                 className="text-gray-400 hover:text-white transition-colors"
               >
@@ -407,6 +409,8 @@ export const UserReportSystem: React.FC<UserReportSystemProps> = ({
                           />
                         )}
                         <button
+                          title="Remove media"
+                          aria-label="Remove this media file"
                           onClick={() => removeMedia(index)}
                           className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700"
                         >
