@@ -1,0 +1,25 @@
+services:
+  # Frontend Service (Static Site)
+  - type: web
+    name: dediwarn-frontend
+    env: static
+    rootDir: dediwarn-main/frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+    # Backend Service (Node.js API)
+  - type: web
+    name: dediwarn-backend
+    env: node
+    plan: free
+    rootDir: ./dediwarn-main/backend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000

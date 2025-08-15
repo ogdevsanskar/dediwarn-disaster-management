@@ -1,0 +1,44 @@
+[build]
+  base = "frontend"
+  command = "npm ci && npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_ENV = "production"
+  CI = "false"
+  GENERATE_SOURCEMAP = "false"
+  VITE_API_URL = "https://dediwarn-backend.onrender.com"
+  VITE_WEBSOCKET_URL = "wss://dediwarn-backend.onrender.com"
+  VITE_OPENWEATHER_API_KEY = "demo_key"
+  VITE_REALTIME_DATA_ENABLED = "true"
+  VITE_EARTHQUAKE_ALERTS = "true"
+  VITE_WEATHER_ALERTS = "true"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"

@@ -1,0 +1,334 @@
+/* Advanced Analytics Dashboard Styles */
+
+.metric-card {
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+  border-left-width: 4px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.metric-card:hover {
+  transform: scale(1.05);
+}
+
+.metric-card--danger {
+  border-left-color: #EF4444;
+}
+
+.metric-card--primary {
+  border-left-color: #3B82F6;
+}
+
+.metric-card--success {
+  border-left-color: #22C55E;
+}
+
+.metric-card--info {
+  border-left-color: #06B6D4;
+}
+
+.metric-icon {
+  padding: 0.75rem;
+  border-radius: 9999px;
+}
+
+.metric-icon--danger {
+  background-color: rgba(239, 68, 68, 0.125);
+}
+
+.metric-icon--primary {
+  background-color: rgba(59, 130, 246, 0.125);
+}
+
+.metric-icon--success {
+  background-color: rgba(34, 197, 94, 0.125);
+}
+
+.metric-icon--info {
+  background-color: rgba(6, 182, 212, 0.125);
+}
+
+.progress-bar {
+  width: 100%;
+  background-color: #e5e7eb;
+  border-radius: 9999px;
+  height: 0.5rem;
+}
+
+.progress-bar--small {
+  height: 0.75rem;
+}
+
+.progress-bar__fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.3s ease-in-out;
+}
+
+.progress-bar__fill--red {
+  background-color: #ef4444;
+}
+
+.progress-bar__fill--orange {
+  background-color: #f97316;
+}
+
+.progress-bar__fill--green {
+  background-color: #22c55e;
+}
+
+.progress-bar__fill--blue {
+  background-color: #3b82f6;
+}
+
+.progress-bar__fill--yellow {
+  background-color: #eab308;
+}
+
+/* Dynamic width classes for progress bars */
+.progress-0 { width: 0%; }
+.progress-5 { width: 5%; }
+.progress-10 { width: 10%; }
+.progress-15 { width: 15%; }
+.progress-20 { width: 20%; }
+.progress-25 { width: 25%; }
+.progress-30 { width: 30%; }
+.progress-35 { width: 35%; }
+.progress-40 { width: 40%; }
+.progress-45 { width: 45%; }
+.progress-50 { width: 50%; }
+.progress-55 { width: 55%; }
+.progress-60 { width: 60%; }
+.progress-65 { width: 65%; }
+.progress-70 { width: 70%; }
+.progress-75 { width: 75%; }
+.progress-80 { width: 80%; }
+.progress-85 { width: 85%; }
+.progress-90 { width: 90%; }
+.progress-95 { width: 95%; }
+.progress-100 { width: 100%; }
+
+.efficiency-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.efficiency-badge--excellent {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.efficiency-badge--good {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.efficiency-badge--poor {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.chart-container {
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+}
+
+.insights-panel {
+  background: linear-gradient(to right, #faf5ff, #eff6ff);
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+  border: 1px solid #e9d5ff;
+}
+
+.dashboard-header {
+  margin-bottom: 2rem;
+}
+
+.control-button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease-in-out;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid transparent;
+}
+
+.control-button--primary {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.control-button--primary:hover {
+  background-color: #2563eb;
+}
+
+.control-button--success {
+  background-color: #22c55e;
+  color: white;
+}
+
+.control-button--success:hover {
+  background-color: #16a34a;
+}
+
+.control-button--purple {
+  background-color: #8b5cf6;
+  color: white;
+}
+
+.control-button--purple:hover {
+  background-color: #7c3aed;
+}
+
+.control-button--secondary {
+  background-color: #e5e7eb;
+  color: #374151;
+}
+
+.control-button--secondary:hover {
+  background-color: #d1d5db;
+}
+
+.control-button--blue {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}
+
+.control-button--blue:hover {
+  background-color: #bfdbfe;
+}
+
+.control-button--green {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.control-button--green:hover {
+  background-color: #bbf7d0;
+}
+
+.tab-navigation {
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 2rem;
+}
+
+.tab-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 0.25rem;
+  border-bottom: 2px solid transparent;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.2s ease-in-out;
+  margin-bottom: -1px;
+}
+
+.tab-button--active {
+  border-bottom-color: #3b82f6;
+  color: #2563eb;
+}
+
+.tab-button--inactive {
+  color: #6b7280;
+}
+
+.tab-button--inactive:hover {
+  color: #374151;
+  border-bottom-color: #d1d5db;
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.model-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.model-card:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.resource-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.insight-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: white;
+  border-radius: 0.5rem;
+}
+
+.insight-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background-color: #a855f7;
+  margin-top: 0.5rem;
+  flex-shrink: 0;
+}
+
+.tooltip-custom {
+  background-color: rgba(255, 255, 255, 0.95);
+  border: none;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .metric-card {
+    padding: 1rem;
+  }
+  
+  .chart-container {
+    padding: 1rem;
+  }
+  
+  .control-button {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+  }
+}

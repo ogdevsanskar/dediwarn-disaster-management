@@ -98,6 +98,15 @@ npm run start:all
 ### 🚨 Emergency Management
 - SMS alert system
 - Emergency broadcast notifications
+
+### 🗺️ Enhanced Navigation System
+- **OpenStreetMap Integration**: Real-time navigation with disaster-aware routing
+- **Turn-by-Turn Navigation**: GPS-powered navigation with voice instructions
+- **Resource Discovery**: Find nearby hospitals, fire stations, and emergency services
+- **Hazard Avoidance**: Dynamic route calculation avoiding disaster zones
+- **Multi-Route Planning**: Compare fastest, shortest, and safest routes
+- **Interactive Search**: Global location search with auto-completion
+- **Demo Available**: Visit `/navigation-demo` to explore navigation features
 - Real-time communication channels
 
 ### 💰 Donation System

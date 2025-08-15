@@ -20,6 +20,7 @@ import {
   Users,
   Calendar
 } from 'lucide-react';
+import GlobalEnvironmentalHub from '../components/GlobalEnvironmentalHub';
 
 interface SatelliteData {
   id: string;
@@ -85,7 +86,7 @@ interface IoTSensor {
 }
 
 const EnhancedDashboard: React.FC = () => {
-  const [activeLayer, setActiveLayer] = useState<'hotspots' | 'satellites' | 'sensors' | 'relief'>('hotspots');
+  const [activeLayer, setActiveLayer] = useState<'hotspots' | 'satellites' | 'sensors' | 'relief' | 'global-hub'>('hotspots');
   const [timeRange, setTimeRange] = useState<'1h' | '24h' | '7d' | '30d'>('24h');
   const [filterSeverity, setFilterSeverity] = useState<string>('all');
   const [satellites, setSatellites] = useState<SatelliteData[]>([]);
@@ -471,7 +472,8 @@ const EnhancedDashboard: React.FC = () => {
                   { key: 'hotspots', label: 'Hotspots', icon: Target },
                   { key: 'satellites', label: 'Satellites', icon: Satellite },
                   { key: 'sensors', label: 'IoT Sensors', icon: Database },
-                  { key: 'relief', label: 'Relief Ops', icon: Shield }
+                  { key: 'relief', label: 'Relief Ops', icon: Shield },
+                  { key: 'global-hub', label: 'Global Hub', icon: Globe }
                 ].map(layer => {
                   const Icon = layer.icon;
                   return (
@@ -711,6 +713,10 @@ const EnhancedDashboard: React.FC = () => {
                   ))}
                 </div>
               </div>
+            )}
+
+            {activeLayer === 'global-hub' && (
+              <GlobalEnvironmentalHub />
             )}
           </div>
         </div>
