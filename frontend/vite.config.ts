@@ -14,6 +14,7 @@ export default defineConfig(() => ({
   },
   optimizeDeps: {
     exclude: ['lucide-react'],
+    include: ['socket.io-client', 'socket.io']
   },
   build: {
     target: 'es2020',
