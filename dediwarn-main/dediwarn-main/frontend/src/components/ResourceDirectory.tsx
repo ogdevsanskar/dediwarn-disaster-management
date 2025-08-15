@@ -442,6 +442,8 @@ export const ResourceDirectory: React.FC<ResourceDirectoryProps> = ({
                 
                 {onNavigate && (
                   <button
+                    title="Navigate to location"
+                    aria-label="Navigate to resource location"
                     onClick={() => onNavigate(resource)}
                     className="flex-1 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors"
                   >
@@ -451,6 +453,8 @@ export const ResourceDirectory: React.FC<ResourceDirectoryProps> = ({
                 )}
 
                 <button
+                  title="Open in Google Maps"
+                  aria-label="Open resource location in Google Maps"
                   onClick={() => {
                     const url = `https://www.google.com/maps/dir/?api=1&destination=${resource.location.lat},${resource.location.lng}`;
                     window.open(url, '_blank');

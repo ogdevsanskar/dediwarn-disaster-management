@@ -159,12 +159,16 @@ export const AlertDetailModal: React.FC<AlertDetailModalProps> = ({ isOpen, onCl
                   <button
                     onClick={handleShare}
                     className="p-2 text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg transition-colors"
+                    title="Share Alert"
+                    aria-label="Share Alert"
                   >
                     <Share2 className="h-5 w-5" />
                   </button>
                   <button
                     onClick={onClose}
                     className="p-2 text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg transition-colors"
+                    title="Close Modal"
+                    aria-label="Close Modal"
                   >
                     <X className="h-5 w-5" />
                   </button>
@@ -269,6 +273,8 @@ export const AlertDetailModal: React.FC<AlertDetailModalProps> = ({ isOpen, onCl
                             <button
                               onClick={() => handleEmergencyCall(contact.number)}
                               className="flex items-center justify-center w-10 h-10 bg-green-600 hover:bg-green-700 text-white rounded-full transition-colors"
+                              title={`Call ${contact.type}`}
+                              aria-label={`Call ${contact.type}: ${contact.number}`}
                             >
                               <Phone className="h-4 w-4" />
                             </button>

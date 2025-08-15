@@ -199,6 +199,8 @@ export const MainDashboard: React.FC<MainDashboardProps> = ({ userLocation }) =>
             return (
               <button
                 key={tab.key}
+                title={`Switch to ${tab.label}`}
+                aria-label={`Switch to ${tab.label} tab`}
                 onClick={() => setActiveTab(tab.key as 'overview' | 'map' | 'reports' | 'resources' | 'volunteers' | 'analytics')}
                 className={`flex items-center px-4 py-3 rounded-lg transition-colors ${
                   activeTab === tab.key
@@ -261,10 +263,18 @@ export const MainDashboard: React.FC<MainDashboardProps> = ({ userLocation }) =>
                         </div>
                         
                         <div className="mt-3 flex space-x-2">
-                          <button className="flex-1 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition-colors">
+                          <button 
+                            title="View alert details"
+                            aria-label="View alert details"
+                            className="flex-1 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition-colors"
+                          >
                             View Details
                           </button>
-                          <button className="px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-sm rounded transition-colors">
+                          <button 
+                            title="Call emergency services"
+                            aria-label="Call emergency services"
+                            className="px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-sm rounded transition-colors"
+                          >
                             <Phone className="h-4 w-4" />
                           </button>
                         </div>
@@ -279,6 +289,8 @@ export const MainDashboard: React.FC<MainDashboardProps> = ({ userLocation }) =>
                 <h2 className="text-xl font-bold text-white mb-4">Quick Actions</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   <button
+                    title="Report Emergency"
+                    aria-label="Report Emergency - Submit incident report"
                     onClick={() => setActiveTab('reports')}
                     className="p-4 bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg transition-colors"
                   >
@@ -288,6 +300,8 @@ export const MainDashboard: React.FC<MainDashboardProps> = ({ userLocation }) =>
                   </button>
                   
                   <button
+                    title="Find Resources"
+                    aria-label="Find Resources - Emergency contacts & shelters"
                     onClick={() => setActiveTab('resources')}
                     className="p-4 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 rounded-lg transition-colors"
                   >
@@ -297,6 +311,8 @@ export const MainDashboard: React.FC<MainDashboardProps> = ({ userLocation }) =>
                   </button>
                   
                   <button
+                    title="Volunteer Portal"
+                    aria-label="Volunteer Portal - Join or coordinate missions"
                     onClick={() => setActiveTab('volunteers')}
                     className="p-4 bg-green-600/20 hover:bg-green-600/30 border border-green-500/30 rounded-lg transition-colors"
                   >
@@ -306,6 +322,8 @@ export const MainDashboard: React.FC<MainDashboardProps> = ({ userLocation }) =>
                   </button>
                   
                   <button
+                    title="Live Map"
+                    aria-label="Live Map - Real-time disaster tracking"
                     onClick={() => setActiveTab('map')}
                     className="p-4 bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/30 rounded-lg transition-colors"
                   >

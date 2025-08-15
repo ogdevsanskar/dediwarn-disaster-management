@@ -1038,6 +1038,8 @@ export const AIAssistant: React.FC = () => {
           <button
             onClick={() => setIsOpen(false)}
             className="p-2 rounded-full hover:bg-white/20 transition-all"
+            title="Close AI Assistant"
+            aria-label="Close AI Assistant"
           >
             <X className="h-4 w-4" />
           </button>
@@ -1489,6 +1491,8 @@ export const AIAssistant: React.FC = () => {
             onClick={() => handleSendMessage()}
             className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-xl transition-colors"
             disabled={!inputMessage.trim() || isListening}
+            title="Send Message"
+            aria-label="Send Message"
           >
             <Send className="h-5 w-5" />
           </button>

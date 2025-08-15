@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Palette, Check } from 'lucide-react';
-import { useTheme } from '../contexts/ThemeContext';
+import { useTheme } from '../hooks/useTheme';
 
 export const ThemeSelector: React.FC = () => {
   const { theme, setTheme, themes } = useTheme();
@@ -9,6 +9,8 @@ export const ThemeSelector: React.FC = () => {
   return (
     <div className="relative">
       <button
+        title="Open theme selector"
+        aria-label="Open theme selector menu"
         onClick={() => setIsOpen(!isOpen)}
         className="p-2 rounded-lg bg-surface border border-border hover:bg-opacity-80 transition-all duration-200 hover:scale-105"
       >

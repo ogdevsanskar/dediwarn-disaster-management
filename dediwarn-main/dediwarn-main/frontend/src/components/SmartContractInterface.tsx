@@ -268,6 +268,8 @@ export const SmartContractInterface: React.FC = () => {
 
           <button
             type="submit"
+            title="Submit Warning to Blockchain"
+            aria-label="Submit warning to blockchain network"
             disabled={!warningText || !location || isSubmitting || !isAuthorized}
             className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 transition-all duration-200"
           >
@@ -327,7 +329,11 @@ export const SmartContractInterface: React.FC = () => {
                   <code className="text-xs bg-slate-800 px-2 py-1 rounded text-blue-400">
                     {tx.hash}
                   </code>
-                  <button className="text-slate-400 hover:text-blue-400 transition-colors">
+                  <button 
+                    title="View transaction on blockchain explorer"
+                    aria-label="View transaction on blockchain explorer"
+                    className="text-slate-400 hover:text-blue-400 transition-colors"
+                  >
                     <ExternalLink className="h-4 w-4" />
                   </button>
                 </div>

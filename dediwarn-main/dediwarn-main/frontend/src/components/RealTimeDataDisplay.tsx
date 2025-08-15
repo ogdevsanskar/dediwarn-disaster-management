@@ -104,6 +104,8 @@ const RealTimeDataDisplay: React.FC<RealTimeDataDisplayProps> = ({
             )}
           </div>
           <button
+            title="Expand panel"
+            aria-label="Expand real-time data panel"
             onClick={onToggleMinimize}
             className="text-gray-400 hover:text-white transition-colors"
           >
@@ -130,19 +132,21 @@ const RealTimeDataDisplay: React.FC<RealTimeDataDisplayProps> = ({
           
           <div className="flex items-center space-x-2">
             <button
+              title={`Auto-refresh ${autoRefresh ? 'enabled' : 'disabled'}`}
+              aria-label={`Toggle auto-refresh - currently ${autoRefresh ? 'enabled' : 'disabled'}`}
               onClick={() => setAutoRefresh(!autoRefresh)}
               className={`p-2 rounded-lg transition-colors ${
                 autoRefresh ? 'bg-blue-500 hover:bg-blue-600 text-white' : 'bg-slate-700 hover:bg-slate-600 text-gray-300'
               }`}
-              title={`Auto-refresh ${autoRefresh ? 'enabled' : 'disabled'}`}
             >
               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
             </button>
             
             <button
+              title="Manual refresh"
+              aria-label="Manually refresh data"
               onClick={refresh}
               className="p-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-gray-300 hover:text-white transition-colors"
-              title="Manual refresh"
               disabled={loading}
             >
               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -150,9 +154,10 @@ const RealTimeDataDisplay: React.FC<RealTimeDataDisplayProps> = ({
             
             {showInCall && onToggleMinimize && (
               <button
+                title="Minimize"
+                aria-label="Minimize real-time data panel"
                 onClick={onToggleMinimize}
                 className="p-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-gray-300 hover:text-white transition-colors"
-                title="Minimize"
               >
                 <ChevronDown className="w-4 h-4" />
               </button>

@@ -165,15 +165,25 @@ export const Warnings: React.FC = () => {
                   </div>
                   <div className="flex items-center space-x-2">
                     <button 
+                      title="View warning details"
+                      aria-label="View warning details"
                       onClick={() => setSelectedWarning(warning)}
                       className="text-slate-400 hover:text-blue-400 transition-colors p-2 hover:bg-slate-700 rounded-lg"
                     >
                       <Eye className="h-5 w-5" />
                     </button>
-                    <button className="text-slate-400 hover:text-blue-400 transition-colors p-2 hover:bg-slate-700 rounded-lg">
+                    <button 
+                      className="text-slate-400 hover:text-blue-400 transition-colors p-2 hover:bg-slate-700 rounded-lg"
+                      title="Share Warning"
+                      aria-label="Share Warning"
+                    >
                       <Share2 className="h-5 w-5" />
                     </button>
-                    <button className="text-slate-400 hover:text-blue-400 transition-colors p-2 hover:bg-slate-700 rounded-lg">
+                    <button 
+                      className="text-slate-400 hover:text-blue-400 transition-colors p-2 hover:bg-slate-700 rounded-lg"
+                      title="View on Blockchain"
+                      aria-label="View on Blockchain"
+                    >
                       <ExternalLink className="h-5 w-5" />
                     </button>
                   </div>

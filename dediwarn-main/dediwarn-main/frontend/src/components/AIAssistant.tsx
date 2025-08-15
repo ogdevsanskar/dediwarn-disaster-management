@@ -584,6 +584,8 @@ export const AIAssistant: React.FC = () => {
                 onClick={() => handleSendMessage()}
                 disabled={!inputMessage.trim()}
                 className="px-3 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 text-white rounded-lg transition-colors"
+                title="Send Message"
+                aria-label="Send Message"
               >
                 <Send className="h-4 w-4" />
               </button>
@@ -602,9 +604,10 @@ export const AIAssistant: React.FC = () => {
                 SMS Alerts ({smsAlerts.length})
               </h3>
               <button
-
                 onClick={() => setShowSmsPanel(false)}
                 className="p-1 hover:bg-slate-700 rounded text-gray-400 hover:text-white transition-colors"
+                title="Close SMS Panel"
+                aria-label="Close SMS Panel"
               >
                 <X className="h-4 w-4" />
               </button>
