@@ -5,8 +5,8 @@ services:
     env: node
     plan: free
     region: oregon
-    rootDir: backend
-    buildCommand: npm ci && npm run build
+    rootDir: dediwarn-main/backend
+    buildCommand: npm install && npm run build
     startCommand: npm start
     healthCheckPath: /api/status
     envVars:
@@ -28,8 +28,9 @@ services:
     name: dediwarn-frontend
     plan: free
     region: oregon
-    buildCommand: rm -rf node_modules/.cache && rm -rf frontend/node_modules/.cache && rm -rf frontend/dist && node generate-version.js && cd frontend && npm ci --silent --force && npm run build:render
-    staticPublishPath: frontend/dist
+    rootDir: dediwarn-main/frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
     pullRequestPreviewsEnabled: false
     headers:
       # AGGRESSIVE CACHE BUSTING FOR RENDER CDN
