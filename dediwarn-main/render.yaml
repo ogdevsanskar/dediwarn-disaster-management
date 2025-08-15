@@ -1,25 +1,144 @@
 services:
-  # Frontend Service (Static Site)
-  - type: web
-    name: dediwarn-frontend
-    env: static
-    rootDir: dediwarn-main/frontend
-    buildCommand: npm install && npm run build
-    staticPublishPath: dist
-    envVars:
-      - key: NODE_ENV
-        value: production
-
-    # Backend Service (Node.js API)
+  # Backend Service (Node.js API)
   - type: web
     name: dediwarn-backend
     env: node
     plan: free
-    rootDir: ./dediwarn-main/backend
-    buildCommand: npm install && npm run build
+    region: oregon
+    rootDir: backend
+    buildCommand: npm ci && npm run build
     startCommand: npm start
+    healthCheckPath: /api/status
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
         value: 10000
+      - key: CORS_ORIGIN
+        value: https://dediwarn-frontend.onrender.com
+      - key: OPENWEATHER_API_KEY
+        value: demo_key
+      - key: FRONTEND_URL
+        value: https://dediwarn-frontend.onrender.com
+      - key: NETLIFY_URL
+        value: https://dediwarn-disaster-management.netlify.app
+
+  # Frontend Service (Static Site)
+  - type: static
+    name: dediwarn-frontend
+    buildCommand: rm -rf node_modules/.cache && rm -rf frontend/node_modules/.cache && rm -rf frontend/dist && node generate-version.js && cd frontend && npm ci --silent --force && npm run build:render
+    staticPublishPath: frontend/dist
+    pullRequestPreviewsEnabled: false
+    headers:
+      # AGGRESSIVE CACHE BUSTING FOR RENDER CDN
+      # Apply no-cache to ALL requests to force fresh content
+      - path: /*
+        name: Cache-Control
+        value: no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0
+      - path: /*
+        name: Pragma
+        value: no-cache
+      - path: /*
+        name: Expires
+        value: "0"
+      - path: /*
+        name: ETag
+        value: "off"
+      - path: /*
+        name: Last-Modified
+        value: "Thu, 01 Jan 1970 00:00:00 GMT"
+      - path: /*
+        name: X-Cache-Control
+        value: no-store
+      
+      # Security Headers
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-XSS-Protection
+        value: 1; mode=block
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+      
+      # Force CDN bypass headers
+      - path: /*
+        name: X-Accel-Expires
+        value: "0"
+      - path: /*
+        name: Surrogate-Control
+        value: no-store
+      
+      # Cache Control for Service Worker
+      - path: /sw.js
+        name: Cache-Control
+        value: no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0
+      - path: /firebase-messaging-sw.js
+        name: Cache-Control
+        value: no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0
+      
+      # Cache Control for Manifest and Critical Files
+      - path: /manifest.json
+        name: Cache-Control
+        value: no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0
+      - path: /offline.html
+        name: Cache-Control
+        value: no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0
+      
+      # Short cache for API data and JSON files
+      - path: "*.json"
+        name: Cache-Control
+        value: no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0
+      
+      # Cache busting for CSS and JS files (when not in /assets/)
+      - path: "*.css"
+        name: Cache-Control
+        value: no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0
+      - path: "*.js"
+        name: Cache-Control
+        value: no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: VITE_API_URL
+        value: https://dediwarn-backend.onrender.com
+      - key: VITE_WEBSOCKET_URL
+        value: wss://dediwarn-backend.onrender.com
+      - key: CI
+        value: false
+      - key: GENERATE_SOURCEMAP
+        value: false
+      - key: DISABLE_ESLINT_PLUGIN
+        value: true
+      - key: SKIP_PREFLIGHT_CHECK
+        value: true
+      - key: BUILD_IGNORE_WARNINGS
+        value: true
+      - key: VITE_CACHE_BUSTER
+        value: force-no-cache
+      - key: VITE_BUILD_TIMESTAMP
+        generateValue: true
+      - key: VITE_FORCE_FRESH_CONTENT
+        value: true
+      - key: VITE_OPENWEATHER_API_KEY
+        value: demo_key
+      - key: VITE_REALTIME_DATA_ENABLED
+        value: true
+      - key: VITE_EARTHQUAKE_ALERTS
+        value: true
+      - key: VITE_WEATHER_ALERTS
+        value: true
+      - key: VITE_TRAFFIC_INCIDENTS
+        value: true
+      - key: VITE_HOSPITAL_CAPACITY
+        value: true
+      - key: VITE_VOLUNTEER_ALERTS
+        value: true
