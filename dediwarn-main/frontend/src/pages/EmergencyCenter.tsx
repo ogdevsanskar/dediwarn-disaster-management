@@ -117,10 +117,18 @@ export const EmergencyCenter: React.FC = () => {
             </div>
 
             <div className="flex justify-center space-x-4">
-              <button className="p-3 bg-slate-700 hover:bg-slate-600 rounded-full transition-colors">
+              <button 
+                className="p-3 bg-slate-700 hover:bg-slate-600 rounded-full transition-colors"
+                title="Toggle Microphone"
+                aria-label="Toggle Microphone"
+              >
                 <Mic className="h-5 w-5 text-white" />
               </button>
-              <button className="p-3 bg-red-600 hover:bg-red-700 rounded-full transition-colors">
+              <button 
+                className="p-3 bg-red-600 hover:bg-red-700 rounded-full transition-colors"
+                title="End Call"
+                aria-label="End Call"
+              >
                 <Phone className="h-5 w-5 text-white" />
               </button>
             </div>
@@ -166,6 +174,8 @@ export const EmergencyCenter: React.FC = () => {
             <button
               onClick={handleSendMessage}
               className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+              title="Send Message"
+              aria-label="Send Emergency Message"
             >
               <Send className="h-4 w-4" />
             </button>
@@ -252,7 +262,11 @@ export const EmergencyCenter: React.FC = () => {
                 placeholder="Enter location or use GPS"
                 className="flex-1 px-4 py-3 bg-slate-900 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:ring-2 focus:ring-blue-500"
               />
-              <button className="px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+              <button 
+                className="px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                title="Use GPS Location"
+                aria-label="Use GPS to get current location"
+              >
                 <MapPin className="h-4 w-4" />
               </button>
             </div>

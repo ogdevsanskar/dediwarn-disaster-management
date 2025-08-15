@@ -123,7 +123,11 @@ contract WarningSystem {
                   <code className="bg-green-100 px-2 py-1 rounded font-mono text-sm flex-1">
                     {contractAddress}
                   </code>
-                  <button className="text-green-600 hover:text-green-800">
+                  <button 
+                    title="View contract on blockchain explorer"
+                    aria-label="View contract on blockchain explorer"
+                    className="text-green-600 hover:text-green-800"
+                  >
                     <ExternalLink className="h-4 w-4" />
                   </button>
                 </div>
@@ -159,6 +163,8 @@ contract WarningSystem {
                 </label>
                 <select
                   value={severity}
+                  title="Select severity level"
+                  aria-label="Select severity level for the warning"
                   onChange={(e) => setSeverity(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >

@@ -291,6 +291,8 @@ const CrowdsourcedReporting: React.FC = () => {
                   {location ? 'GPS Location Captured' : 'Getting location...'}
                 </div>
                 <button
+                  title="Get current location"
+                  aria-label="Get current GPS location"
                   onClick={getCurrentLocation}
                   className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
                 >
@@ -348,6 +350,8 @@ const CrowdsourcedReporting: React.FC = () => {
                     <div key={index} className="flex items-center space-x-2 bg-slate-700 px-3 py-2 rounded-lg">
                       <span className="text-sm text-white">{file.name}</span>
                       <button
+                        title="Remove file"
+                        aria-label="Remove this file from report"
                         onClick={() => setReportForm(prev => ({
                           ...prev,
                           media: prev.media.filter((_, i) => i !== index)

@@ -94,6 +94,8 @@ export const WalletConnect: React.FC = () => {
             <button
               onClick={() => setShowDetails(false)}
               className="text-slate-400 hover:text-white transition-colors"
+              title="Close Wallet Details"
+              aria-label="Close Wallet Details"
             >
               <X className="h-4 w-4" />
             </button>
@@ -112,7 +114,11 @@ export const WalletConnect: React.FC = () => {
                 >
                   {copied ? <CheckCircle className="h-4 w-4 text-green-400" /> : <Copy className="h-4 w-4" />}
                 </button>
-                <button className="text-slate-400 hover:text-blue-400 transition-colors">
+                <button 
+                  className="text-slate-400 hover:text-blue-400 transition-colors"
+                  title="View on Explorer"
+                  aria-label="View wallet on blockchain explorer"
+                >
                   <ExternalLink className="h-4 w-4" />
                 </button>
               </div>
