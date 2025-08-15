@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="cache-control" content="no-store, no-cache, must-revalidate, proxy-revalidate">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <title>Offline - Disaster Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .offline-container {
+            text-align: center;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.1);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        .offline-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+        
+        .offline-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+        
+        .offline-message {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .offline-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .retry-button, .cache-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 160px;
+            justify-content: center;
+        }
+        
+        .retry-button:hover, .cache-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .retry-button:active, .cache-button:active {
+            transform: translateY(0);
+        }
+        
+        .connection-status {
+            margin-top: 30px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            border-left: 4px solid #fbbf24;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-offline {
+            background-color: #ef4444;
+        }
+        
+        .status-online {
+            background-color: #10b981;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .emergency-info {
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(239, 68, 68, 0.2);
+            border-radius: 10px;
+            border-left: 4px solid #ef4444;
+        }
+        
+        .emergency-title {
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #fef2f2;
+        }
+        
+        .emergency-numbers {
+            text-align: left;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+        }
+        
+        .loading-spinner.hidden {
+            display: none;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 600px) {
+            .offline-container {
+                padding: 30px 20px;
+                margin: 10px;
+            }
+            
+            .offline-title {
+                font-size: 2rem;
+            }
+            
+            .offline-icon {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <div class="offline-icon">📡</div>
+        <h1 class="offline-title">You're Offline</h1>
+        <p class="offline-message">
+            The Disaster Management System is currently unavailable. 
+            Please check your internet connection and try again.
+        </p>
+        
+        <div class="offline-actions">
+            <button class="retry-button" onclick="retryConnection()">
+                <span class="loading-spinner hidden" id="loadingSpinner"></span>
+                <span id="retryText">🔄 Try Again</span>
+            </button>
+            
+            <button class="cache-button" onclick="clearCacheAndRetry()">
+                🗑️ Clear Cache & Retry
+            </button>
+        </div>
+        
+        <div class="connection-status">
+            <span class="status-indicator status-offline" id="statusIndicator"></span>
+            <span id="connectionStatus">Connection: Offline</span>
+        </div>
+        
+        <div class="emergency-info">
+            <div class="emergency-title">🚨 Emergency Contacts</div>
+            <div class="emergency-numbers">
+                <strong>Emergency Services:</strong> 911<br>
+                <strong>Fire Department:</strong> 911<br>
+                <strong>Police:</strong> 911<br>
+                <strong>Medical Emergency:</strong> 911<br>
+                <strong>Disaster Hotline:</strong> 1-800-621-3362
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let retryAttempts = 0;
+        const maxRetries = 5;
+        
+        // Check connection status
+        function updateConnectionStatus() {
+            const isOnline = navigator.onLine;
+            const statusIndicator = document.getElementById('statusIndicator');
+            const connectionStatus = document.getElementById('connectionStatus');
+            
+            if (isOnline) {
+                statusIndicator.className = 'status-indicator status-online';
+                connectionStatus.textContent = 'Connection: Online';
+            } else {
+                statusIndicator.className = 'status-indicator status-offline';
+                connectionStatus.textContent = 'Connection: Offline';
+            }
+        }
+        
+        // Retry connection
+        async function retryConnection() {
+            const retryButton = document.querySelector('.retry-button');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const retryText = document.getElementById('retryText');
+            
+            if (retryAttempts >= maxRetries) {
+                retryText.textContent = '❌ Max retries reached';
+                retryButton.disabled = true;
+                return;
+            }
+            
+            retryAttempts++;
+            
+            // Show loading state
+            loadingSpinner.classList.remove('hidden');
+            retryText.textContent = `Retrying... (${retryAttempts}/${maxRetries})`;
+            retryButton.disabled = true;
+            
+            try {
+                // Add cache busting to force fresh request
+                const timestamp = Date.now();
+                const response = await fetch(`/?v=${timestamp}&_t=${timestamp}`, {
+                    method: 'HEAD',
+                    headers: {
+                        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+                        'Pragma': 'no-cache',
+                        'Expires': '0'
+                    }
+                });
+                
+                if (response.ok) {
+                    // Connection restored, redirect to main app
+                    window.location.href = `/?v=${timestamp}&_t=${timestamp}`;
+                    return;
+                }
+            } catch (error) {
+                console.log('Retry failed:', error);
+            }
+            
+            // Reset button state
+            setTimeout(() => {
+                loadingSpinner.classList.add('hidden');
+                retryText.textContent = '🔄 Try Again';
+                retryButton.disabled = false;
+            }, 2000);
+        }
+        
+        // Clear cache and retry
+        async function clearCacheAndRetry() {
+            const cacheButton = document.querySelector('.cache-button');
+            const originalText = cacheButton.textContent;
+            
+            cacheButton.textContent = '🗑️ Clearing cache...';
+            cacheButton.disabled = true;
+            
+            try {
+                // Clear all caches
+                if ('caches' in window) {
+                    const cacheNames = await caches.keys();
+                    await Promise.all(
+                        cacheNames.map(cacheName => caches.delete(cacheName))
+                    );
+                }
+                
+                // Clear localStorage and sessionStorage
+                localStorage.clear();
+                sessionStorage.clear();
+                
+                // Force hard refresh with cache busting
+                const timestamp = Date.now();
+                window.location.href = `/?v=${timestamp}&_t=${timestamp}&cache=clear`;
+                
+            } catch (error) {
+                console.error('Cache clearing failed:', error);
+                cacheButton.textContent = '❌ Cache clear failed';
+                
+                setTimeout(() => {
+                    cacheButton.textContent = originalText;
+                    cacheButton.disabled = false;
+                }, 3000);
+            }
+        }
+        
+        // Auto-retry when connection is restored
+        function setupAutoRetry() {
+            window.addEventListener('online', () => {
+                updateConnectionStatus();
+                setTimeout(() => {
+                    retryConnection();
+                }, 1000);
+            });
+            
+            window.addEventListener('offline', updateConnectionStatus);
+        }
+        
+        // Periodic connection check
+        function startPeriodicCheck() {
+            setInterval(async () => {
+                if (navigator.onLine) {
+                    try {
+                        const response = await fetch('/version.json', {
+                            method: 'HEAD',
+                            headers: {
+                                'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate'
+                            }
+                        });
+                        
+                        if (response.ok) {
+                            // Connection is working, redirect
+                            const timestamp = Date.now();
+                            window.location.href = `/?v=${timestamp}&_t=${timestamp}`;
+                        }
+                    } catch (error) {
+                        // Still offline
+                    }
+                }
+                updateConnectionStatus();
+            }, 10000); // Check every 10 seconds
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            updateConnectionStatus();
+            setupAutoRetry();
+            startPeriodicCheck();
+            
+            // Reset retry counter after 5 minutes
+            setTimeout(() => {
+                retryAttempts = 0;
+                const retryButton = document.querySelector('.retry-button');
+                const retryText = document.getElementById('retryText');
+                retryButton.disabled = false;
+                retryText.textContent = '🔄 Try Again';
+            }, 5 * 60 * 1000);
+        });
+        
+        // Service Worker communication
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.addEventListener('message', (event) => {
+                if (event.data && event.data.type === 'CACHE_UPDATE_REQUIRED') {
+                    // New version available, show update notification
+                    const updateNotification = document.createElement('div');
+                    updateNotification.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        background: #10b981;
+                        color: white;
+                        padding: 15px 20px;
+                        border-radius: 10px;
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                        z-index: 1000;
+                        cursor: pointer;
+                        animation: slideIn 0.3s ease;
+                    `;
+                    
+                    updateNotification.innerHTML = `
+                        <div>📱 <strong>Update Available!</strong></div>
+                        <div style="font-size: 0.9rem; margin-top: 5px;">Click to refresh and get the latest version</div>
+                    `;
+                    
+                    updateNotification.onclick = () => {
+                        clearCacheAndRetry();
+                    };
+                    
+                    document.body.appendChild(updateNotification);
+                    
+                    // Auto-remove after 10 seconds
+                    setTimeout(() => {
+                        if (updateNotification.parentNode) {
+                            updateNotification.remove();
+                        }
+                    }, 10000);
+                }
+            });
+        }
+    </script>
+    
+    <style>
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</body>
+</html>

@@ -6,12 +6,13 @@
   "description": "Disaster Management Application - Backend (Express + TypeScript)",
   "main": "dist/server.js",
   "engines": {
-    "node": ">=18.0.0",
+    "node": "18.x",
     "npm": ">=8.0.0"
   },
   "scripts": {
     "dev": "tsx watch server.ts",
-    "build": "tsc",
+    "build": "tsc && npm run copy-files",
+    "copy-files": "copyfiles -u 1 \"src/**/*.{json,env}\" dist/",
     "start": "node dist/server.js",
     "test": "jest",
     "test:watch": "jest --watch",
